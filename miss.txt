@@ -1,0 +1,30 @@
+Cz1:
+
+to ma być 1/3 raportu końcowego.
+
+dodać artykuły jakieś do podobnej tematyki. same technologie jak łączenie C# i pythona nie przejdzie, sam neat to też średnio.
+
+Opisać problematykę.
+
+na około 1,5 storny.
+najlepiej jakieś 5-6 powiązanych artykułów. najlepiej z najnowszych lat. 
+
+cz2:
+
+wykorzystywane algorytmy w podejściu.
+tyle ile stron będzie trzeba to zrobić. można dawać pseudokody itp.
+ps. korzystać z biblioteki neat
+
+cz3:
+wyniki eksperymentu
+
+
+
+spróbować tu konto:
+https://portal.plgrid.pl/sign_up/subordinate/affiliations
+
+
+każde kolejne sprawozdanie jest nadbudową poprzedniego. wysyłać to co ostatnio się zrobiło + tematyka z nowej części.
+
+sprawozdanie wstawić do naszej prezentacji najlepiej.
+można poprawiać pracę wstecz, więc jak coś się nie spodoba to nie wahać się naprawić.
