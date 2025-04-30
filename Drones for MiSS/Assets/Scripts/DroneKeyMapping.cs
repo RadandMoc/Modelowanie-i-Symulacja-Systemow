@@ -10,7 +10,7 @@ namespace Assets.Scripts
     public static class DroneMoveKeyMapping
     {
         // Mapa: ruch -> kod klawisza (w formacie heksadecymalnym)
-        private static readonly Dictionary<DroneMove, ushort> keyMap = new Dictionary<DroneMove, ushort>
+        private static readonly Dictionary<DroneMove, byte> keyMap = new Dictionary<DroneMove, byte>
     {
         { DroneMove.Forward,         0x57 }, // W
         { DroneMove.Backward,        0x53 }, // S
@@ -26,10 +26,14 @@ namespace Assets.Scripts
         { DroneMove.SwingLeft,       0x51 }, // Q
     };
 
+      
+
+ 
+
         /// <summary>
         /// Zwraca odpowiadający klawisz (kod wirtualny) dla danego ruchu.
         /// </summary>
-        public static ushort GetKeyCode(this DroneMove move)
+        public static byte GetKeyCode(this DroneMove move)
         {
             return keyMap[move];
         }

@@ -20,10 +20,10 @@ public class RaycastHitting : MonoBehaviour
     {
         frameCounter++;
 
-        if (frameCounter % 10 == 0)
+        if (frameCounter % 2 == 0)
         {
             float[] sensorReadings = ConeRaycastSensors(transform, sensorMaxDistance, horizontalRays, verticalRays, horizontalAngle, verticalAngle);
-
+			Debug.Log("Jestem");
             if (frameCounter % 90 == 0)
             {
                 Debug.Log("Pierwszy sensor: " + sensorReadings[0]);

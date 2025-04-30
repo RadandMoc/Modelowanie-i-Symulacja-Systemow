@@ -5,12 +5,14 @@ using System.Collections;
 public class WindowsOpener : MonoBehaviour
 {
 
+    bool isOpen = false;
 
     public void RotateWindow(float angle, float duration)
     {
-        StartCoroutine(RotateOverTime(angle, duration));
+        float rotationAngle = isOpen ? -angle : angle;
+        StartCoroutine(RotateOverTime(rotationAngle, duration));
+        isOpen = !isOpen;
     }
-
 
     private IEnumerator RotateOverTime(float angle, float duration)
     {

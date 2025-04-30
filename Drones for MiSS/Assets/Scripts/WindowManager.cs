@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class WindowsManager : MonoBehaviour
 {
-
     public List<WindowsOpener> windows;
     int i = 0;
     int idx = 0;

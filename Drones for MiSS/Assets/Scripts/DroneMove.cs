@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts
 {
- 
     public enum DroneMove
     {
         Forward,
@@ -22,6 +21,4 @@ namespace Assets.Scripts
         SwingRight,
         SwingLeft
     }
-
-    
 }
