@@ -2,10 +2,10 @@ using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem;
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using Python.Runtime;
 using System.IO;
 using Assets.Scripts;
+
 public class DroneSim : MonoBehaviour
 {
     
@@ -16,7 +16,16 @@ public class DroneSim : MonoBehaviour
 
     private void Start()
     {
+        /*
         StartCoroutine(RandomKeyPressCoroutine());
+        */
+    }
+
+    public void ClickKey() 
+    {
+        byte key = DroneMoveKeyMapping.GetKeyCode(controller.MakeAction());
+        KeyboardSimulator.PressKey(key);
+        KeyboardSimulator.ReleaseKey(key);
     }
 
     private IEnumerator RandomKeyPressCoroutine()

@@ -26,10 +26,6 @@ namespace Assets.Scripts
         { DroneMove.SwingLeft,       0x51 }, // Q
     };
 
-      
-
- 
-
         /// <summary>
         /// Zwraca odpowiadający klawisz (kod wirtualny) dla danego ruchu.
         /// </summary>

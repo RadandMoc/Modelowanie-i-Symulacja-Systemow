@@ -622,6 +622,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 306900640}
+  - component: {fileID: 306900641}
   m_Layer: 0
   m_Name: Drone
   m_TagString: Untagged
@@ -645,6 +646,20 @@ Transform:
   - {fileID: 145072026}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &306900641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 306900639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00ae12d1ff6340a4f8fd752466ab37ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interval: 0.1
+  holdTime: 0.5
 --- !u!1 &333424762
 GameObject:
   m_ObjectHideFlags: 0
@@ -785,6 +800,56 @@ Transform:
   - {fileID: 71771505}
   - {fileID: 333424763}
   m_Father: {fileID: 2087819046}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &930691703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 930691705}
+  - component: {fileID: 930691704}
+  m_Layer: 0
+  m_Name: SimManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &930691704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930691703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d8bb75b841fa0a44bb08e40990c87c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalGenerations: 100
+  populationSize: 50
+  simulationTimeLimit: 5
+  simulationSceneName: Drone_tests
+  dronePrefab: {fileID: 306900639}
+  droneController: {fileID: 306900641}
+--- !u!4 &930691705
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930691703}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.055343628}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &981680214
 GameObject:
@@ -1909,3 +1974,4 @@ SceneRoots:
   - {fileID: 981680215}
   - {fileID: 2087819046}
   - {fileID: 306900640}
+  - {fileID: 930691705}
