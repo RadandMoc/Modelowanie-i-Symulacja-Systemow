@@ -46,7 +46,7 @@ namespace Trainer
 			}
 		}
 
-		public ICollection<double> RunSimulations(ICollection<string/*Jakiego typu byłaby otrzymana kolekcja genomów?*/> genomes)
+		public ICollection<double> RunSimulations(ICollection<string> genomes)
 		{
 			Dictionary<int, string> genomeDict = new Dictionary<int, string>(); //key-genome id, value-genome
 			SortedDictionary<int, string> results = new SortedDictionary<int, string>(); // key-genome id, value-fitness
