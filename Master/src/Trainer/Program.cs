@@ -8,6 +8,7 @@ namespace Trainer
 	{
 		static void Main(string[] args)
 		{
+			/*
 			const int numWorkers = 2;
 			//string unityPath = @"UnitySim/Drones for MiSS.exe";  // <-- zmień na swoją ścieżkę
 			string unityPath = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", @"UnitySim", "Drones for MiSS.exe");
@@ -44,7 +45,19 @@ namespace Trainer
 				double fitness = JsonSerializer.Deserialize<double>(fitnessJson);
 				Console.WriteLine($"Worker {i} returned fitness: {fitness}");
 			}
+			*/
+			List<string> genomes = new List<string>();
+			for(int i = 0; i < 10; i++)
+			{
+				genomes.Add(GenerateFakeGenome(i));
+			}
 
+			UnityCommunication unityComm = new UnityCommunication(6);
+			ICollection<double> results = unityComm.RunSimulations(genomes);
+			foreach (var result in results)
+			{
+				Console.WriteLine(result);
+			}
 
 			string GenerateFakeGenome(int index)
 			{
