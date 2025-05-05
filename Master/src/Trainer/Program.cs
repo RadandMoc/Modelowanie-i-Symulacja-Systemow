@@ -8,12 +8,13 @@ namespace Trainer
 	{
 		static void Main(string[] args)
 		{
-			const int numWorkers = 4;
-			string unityPath = @"UnitySim/dron.exe";  // <-- zmień na swoją ścieżkę
+			const int numWorkers = 2;
+			//string unityPath = @"UnitySim/Drones for MiSS.exe";  // <-- zmień na swoją ścieżkę
+			string unityPath = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", @"UnitySim", "Drones for MiSS.exe");
 
 			for (int i = 0; i < numWorkers; i++)
 			{
-				string workerDir = $"Workers/Worker_{i}";
+				string workerDir = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", $"Workers/Worker_{i}");
 				Directory.CreateDirectory(workerDir);
 
 				// 1. Zapisz genom jako JSON
@@ -34,7 +35,8 @@ namespace Trainer
 			// 3. Oczekuj na wyniki
 			for (int i = 0; i < numWorkers; i++)
 			{
-				string resultPath = $"Workers/Worker_{i}/result.json";
+				//string resultPath = $"Workers/Worker_{i}/result.json";
+				string resultPath = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", $"Workers/Worker_{i}/result.json");
 				while (!File.Exists(resultPath))
 					Thread.Sleep(200);
 
