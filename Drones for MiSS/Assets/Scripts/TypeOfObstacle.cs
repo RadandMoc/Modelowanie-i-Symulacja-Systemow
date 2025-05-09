@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+
+namespace Assets.Scripts
+{
+    public class TypeOfObstacle : MonoBehaviour
+    {
+        [SerializeField]
+        private double isObstacle;
+        [SerializeField]
+        private double isForClean;
+        [SerializeField]
+        private double isMovable;
+
+        public double IsObstacle { get => isObstacle;}
+        public double IsForClean { get => isForClean;}
+        public double IsMovable { get => isMovable; }
+    }
+}

@@ -10,7 +10,7 @@ public class MainSimulation : MonoBehaviour
     [Header("Simulation Settings")]
     public int totalGenerations = 100; // Ile generacji ma trwać trening
     public int populationSize = 50;   // Rozmiar populacji w każdej generacji (często definiowany przez NEAT)
-    public float simulationTimeLimit = 60f; // Maksymalny czas trwania symulacji dla jednego drona (w sekundach)
+    public float simulationTimeLimit = 600f; // Maksymalny czas trwania symulacji dla jednego drona (w sekundach)
 
     [Header("Scene Management")]
     public string simulationSceneName = "DroneSimulationScene"; // Nazwa sceny do przeładowania
@@ -32,7 +32,9 @@ public class MainSimulation : MonoBehaviour
 
 
     [SerializeField]
-    private DroneSim droneController ; // Referencja do kontrolera aktywnego drona
+    private DroneSim3 droneController ; // Referencja do kontrolera aktywnego drona
+
+    private IFitnessFunction fitnessFunction;
 
     // --- Singleton Pattern (Opcjonalny, ale pomocny) ---
     // Aby upewnić się, że istnieje tylko jedna instancja MainSimulation
@@ -59,7 +61,7 @@ public class MainSimulation : MonoBehaviour
     {
         // Uruchom cykl symulacji tylko jeśli nie jest już uruchomiony
         // i jeśli jesteśmy w odpowiedniej scenie (lub przy pierwszym uruchomieniu)
-        Time.timeScale = 1.5f;
+        //Time.timeScale = 0.5f;
         Debug.Log($"Prefab drona: {dronePrefab}");
         if (!isSimulationRunning && SceneManager.GetActiveScene().name == simulationSceneName)
         {
@@ -164,7 +166,7 @@ public class MainSimulation : MonoBehaviour
                 // Musimy jednak poczekać jedną klatkę, aby Start() i Awake() w nowej scenie zdążyły się wykonać.
                 var obj = GameObject.Find("Drone"); // Upewnij się, że prefab jest w zasobach
                 dronePrefab = obj;
-                droneController = obj.GetComponent<DroneSim>();
+                droneController = obj.GetComponent<DroneSim3>();
                 yield return null;
 
             } // Koniec pętli przez genomy

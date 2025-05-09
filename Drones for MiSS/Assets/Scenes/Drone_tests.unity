@@ -253,6 +253,7 @@ GameObject:
   - component: {fileID: 71771508}
   - component: {fileID: 71771507}
   - component: {fileID: 71771506}
+  - component: {fileID: 71771510}
   m_Layer: 0
   m_Name: InsideWindow
   m_TagString: Untagged
@@ -361,6 +362,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 71771504}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &71771510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71771504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a4b3d155f11d14b88a237e4c484b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObstacle: 1
+  isForClean: 1
+  isMovable: 1
 --- !u!1 &145072015 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1749469876035402, guid: 8b826a7c5dffaf04d99fa3f39f8d9060, type: 3}
@@ -412,6 +428,7 @@ GameObject:
   - component: {fileID: 182825913}
   - component: {fileID: 182825912}
   - component: {fileID: 182825911}
+  - component: {fileID: 182825914}
   m_Layer: 0
   m_Name: OutsideWindow
   m_TagString: Untagged
@@ -508,6 +525,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 182825909}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &182825914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182825909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a4b3d155f11d14b88a237e4c484b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObstacle: 1
+  isForClean: 0
+  isMovable: 0
 --- !u!1 &259678598
 GameObject:
   m_ObjectHideFlags: 0
@@ -612,6 +644,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: c3d67df85cdf2904db4b914ddd22ad38, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1692442021}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: c3d67df85cdf2904db4b914ddd22ad38, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1692442022}
   m_SourcePrefab: {fileID: 100100000, guid: c3d67df85cdf2904db4b914ddd22ad38, type: 3}
 --- !u!1 &306900639
 GameObject:
@@ -655,11 +690,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 306900639}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00ae12d1ff6340a4f8fd752466ab37ed, type: 3}
+  m_Script: {fileID: 11500000, guid: 831b4a6e15cf7cd4e92af4ee292ed8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interval: 0.1
-  holdTime: 0.5
+  clickDuration: 0.1
 --- !u!1 &333424762
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,6 +706,7 @@ GameObject:
   - component: {fileID: 333424766}
   - component: {fileID: 333424765}
   - component: {fileID: 333424764}
+  - component: {fileID: 333424767}
   m_Layer: 0
   m_Name: OutsideWindow
   m_TagString: Untagged
@@ -768,6 +803,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 333424762}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &333424767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333424762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a4b3d155f11d14b88a237e4c484b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObstacle: 1
+  isForClean: 0
+  isMovable: 0
 --- !u!1 &822867551
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,6 +1029,7 @@ GameObject:
   - component: {fileID: 1075887561}
   - component: {fileID: 1075887560}
   - component: {fileID: 1075887559}
+  - component: {fileID: 1075887564}
   m_Layer: 0
   m_Name: InsideWindow
   m_TagString: Untagged
@@ -1087,6 +1138,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1119017892}
   m_LocalEulerAnglesHint: {x: 0, y: 178.493, z: 0}
+--- !u!114 &1075887564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1075887558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a4b3d155f11d14b88a237e4c484b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObstacle: 1
+  isForClean: 1
+  isMovable: 1
 --- !u!1 &1103299953
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,6 +1164,7 @@ GameObject:
   - component: {fileID: 1103299954}
   - component: {fileID: 1103299956}
   - component: {fileID: 1103299955}
+  - component: {fileID: 1103299957}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -1180,6 +1247,21 @@ Terrain:
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_TreeMotionVectorModeOverride: 3
+--- !u!114 &1103299957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1103299953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a4b3d155f11d14b88a237e4c484b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObstacle: 1
+  isForClean: 0
+  isMovable: 0
 --- !u!1 &1119017891
 GameObject:
   m_ObjectHideFlags: 0
@@ -1443,6 +1525,7 @@ GameObject:
   - component: {fileID: 1464338677}
   - component: {fileID: 1464338676}
   - component: {fileID: 1464338675}
+  - component: {fileID: 1464338678}
   m_Layer: 0
   m_Name: OutsideWindow
   m_TagString: Untagged
@@ -1539,6 +1622,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1464338673}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1464338678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464338673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a4b3d155f11d14b88a237e4c484b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObstacle: 1
+  isForClean: 0
+  isMovable: 0
 --- !u!1001 &1472806388
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1603,6 +1701,7 @@ GameObject:
   - component: {fileID: 1533924001}
   - component: {fileID: 1533924000}
   - component: {fileID: 1533923999}
+  - component: {fileID: 1533924003}
   m_Layer: 0
   m_Name: InsideWindow
   m_TagString: Untagged
@@ -1711,6 +1810,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1533923997}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1533924003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533923997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a4b3d155f11d14b88a237e4c484b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObstacle: 1
+  isForClean: 1
+  isMovable: 1
 --- !u!1 &1692442017 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: c3d67df85cdf2904db4b914ddd22ad38, type: 3}
@@ -1743,6 +1857,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300002, guid: c3d67df85cdf2904db4b914ddd22ad38, type: 3}
+--- !u!114 &1692442022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1692442017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a4b3d155f11d14b88a237e4c484b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObstacle: 1
+  isForClean: 0
+  isMovable: 0
 --- !u!850595691 &1759035983
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -1816,6 +1945,7 @@ GameObject:
   - component: {fileID: 1830934445}
   - component: {fileID: 1830934444}
   - component: {fileID: 1830934443}
+  - component: {fileID: 1830934446}
   m_Layer: 0
   m_Name: OutsideWindow
   m_TagString: Untagged
@@ -1912,6 +2042,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1830934441}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1830934446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830934441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a4b3d155f11d14b88a237e4c484b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObstacle: 1
+  isForClean: 0
+  isMovable: 0
 --- !u!1 &2087819044
 GameObject:
   m_ObjectHideFlags: 0
