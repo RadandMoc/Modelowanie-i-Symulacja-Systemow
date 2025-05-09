@@ -13,6 +13,8 @@ public class DroneSim : MonoBehaviour
     public float holdTime = 1f;
     private bool isHeadless;
     private IMakeAction controller = new RandomController();
+    byte key = 0x57; // W
+
 
     private void Start()
     {
@@ -23,9 +25,9 @@ public class DroneSim : MonoBehaviour
 
     public void ClickKey() 
     {
-        byte key = DroneMoveKeyMapping.GetKeyCode(controller.MakeAction());
-        KeyboardSimulator.PressKey(key);
         KeyboardSimulator.ReleaseKey(key);
+        key = DroneMoveKeyMapping.GetKeyCode(controller.MakeAction());
+        KeyboardSimulator.PressKey(key);
     }
 
     private IEnumerator RandomKeyPressCoroutine()
@@ -61,8 +63,5 @@ public class DroneSim : MonoBehaviour
             }
         }
     }
-    private void OnApplicationQuit()
-    {
-        PythonEngine.Shutdown();
-    }
+   
 }

@@ -32,7 +32,7 @@ public class MainSimulation : MonoBehaviour
 
 
     [SerializeField]
-    private DroneSim3 droneController ; // Referencja do kontrolera aktywnego drona
+    private DroneSim droneController ; // Referencja do kontrolera aktywnego drona
 
     private IFitnessFunction fitnessFunction;
 
@@ -166,7 +166,7 @@ public class MainSimulation : MonoBehaviour
                 // Musimy jednak poczekać jedną klatkę, aby Start() i Awake() w nowej scenie zdążyły się wykonać.
                 var obj = GameObject.Find("Drone"); // Upewnij się, że prefab jest w zasobach
                 dronePrefab = obj;
-                droneController = obj.GetComponent<DroneSim3>();
+                droneController = obj.GetComponent<DroneSim>();
                 yield return null;
 
             } // Koniec pętli przez genomy

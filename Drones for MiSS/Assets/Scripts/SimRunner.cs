@@ -12,6 +12,10 @@ using SharpNeat.Phenomes;
 public class SimRunner: MonoBehaviour
 {
 	private const string XmlElementNameNetwork = "Network";
+
+	private DroneSim drone;
+
+
 	void Start()
 	{
 		//Debug.Log("SimRunner started");
@@ -122,6 +126,9 @@ public class SimRunner: MonoBehaviour
 				Application.Quit();
 				return;
 			}
+
+
+
 		}
 		catch (Exception ex)
 		{
