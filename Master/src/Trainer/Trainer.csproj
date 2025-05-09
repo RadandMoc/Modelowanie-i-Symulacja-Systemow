@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Box2dTestHarness\Box2dTestHarness.csproj" />
+    <ProjectReference Include="..\EfficacySampler\EfficacySampler.csproj" />
+    <ProjectReference Include="..\SharpNeatConsole\SharpNeatConsole.csproj" />
+    <ProjectReference Include="..\SharpNeatDomainsExtra\SharpNeatDomainsExtra.csproj" />
+    <ProjectReference Include="..\SharpNeatDomains\SharpNeatDomains.csproj" />
+    <ProjectReference Include="..\SharpNeatGUI\SharpNeatGUI.csproj" />
+    <ProjectReference Include="..\SharpNeatLib\SharpNeatLib.csproj" />
+    <ProjectReference Include="..\SharpNeatViewLib\SharpNeatViewLib.csproj" />
+  </ItemGroup>
+
+</Project>
