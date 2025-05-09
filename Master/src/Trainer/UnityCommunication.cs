@@ -1,17 +1,18 @@
-﻿using System;
+﻿using SharpNeat.Genomes.Neat;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Trainer
 {
 	internal class UnityCommunication
 	{
 		private int unityThreads;
-		private readonly Dictionary<int, int> activeThreads = new Dictionary<int, int>(); // Key-no. worker, value-genome id
 		public static readonly string UNITY_PATH = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", @"UnitySim", "Drones for MiSS.exe");
 		public static readonly string WORKER_PATH = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", $"Workers/Worker_");
 		internal UnityCommunication(int unityThreads)
@@ -20,11 +21,26 @@ namespace Trainer
 		}
 		internal UnityCommunication() : this(1) { }
 
-		private void SaveGenome(string genome, int workerId)
+		private void SaveGenome(NeatGenome genome, int workerId)
 		{
-			string workerDir = $"{WORKER_PATH}{workerId.ToString()}";
+			string workerDir = $"{WORKER_PATH}{workerId}";
 			Directory.CreateDirectory(workerDir);
-			File.WriteAllText(Path.Combine(workerDir, "genome.json"), genome);
+			//File.WriteAllText(Path.Combine(workerDir, "genome.json"), genome);
+			string filePath = Path.Combine(workerDir, "genome.xml");
+			try
+			{
+				using (XmlWriter xw = XmlWriter.Create(filePath, new XmlWriterSettings { Indent = true }))
+				{
+					// Zakładamy, że nodeFnIds=true jest odpowiednie dla Twojego przypadku (często wymagane)
+					// Jeśli nie potrzebujesz ID funkcji aktywacji dla węzłów, zmień na false.
+					NeatGenomeXmlIO.Write(xw, genome, true); // - Użycie metody Write z NeatGenomeXmlIO
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Błąd podczas zapisu genomu {genome.Id} dla workera {workerId}: {ex.Message}");
+				// Rozważ logowanie błędu lub inną obsługę
+			}
 		}
 
 		private string? GetFitness(int workerId)
@@ -46,17 +62,13 @@ namespace Trainer
 			}
 		}
 
-		public ICollection<double> RunSimulations(ICollection<string> genomes)
+		public void RunSimulations(ICollection<NeatGenome> genomes)
 		{
-			Dictionary<int, string> genomeDict = new Dictionary<int, string>(); //key-genome id, value-genome
-			SortedDictionary<int, string> results = new SortedDictionary<int, string>(); // key-genome id, value-fitness
-			foreach (var genome in genomes)
-			{
-				int workerId = genomeDict.Count;
-				genomeDict.Add(workerId, genome);
-			}
 			int checkingWorker = 0;
-			int nextGenomeId = 0;
+			Dictionary<int, uint> activeThreads = new Dictionary<int, uint>(); // Key-no. worker, value-genome id
+			Dictionary<uint, NeatGenome> genomeDict = genomes.ToDictionary(g => g.Id); //key-genome id, value-genome
+			Queue<NeatGenome> genomesToCalculateFitness = new(genomes); //[.. genomes];  genomes.ToList();
+
 			while (genomeDict.Count > 0)
 			{
 				if (activeThreads.ContainsKey(checkingWorker))
@@ -64,36 +76,33 @@ namespace Trainer
 					string? fitness = GetFitness(checkingWorker);
 					if (!Object.Equals(fitness, null))
 					{
-						results.Add(activeThreads[checkingWorker], fitness);
+						double result = JsonSerializer.Deserialize<double>(fitness);
 						File.Delete($"{WORKER_PATH}{checkingWorker}/result.json");
+						genomeDict[activeThreads[checkingWorker]].EvaluationInfo.SetFitness(result); //aktualizuj fitness
+						Console.WriteLine($"Worker {checkingWorker} finished processing genome {activeThreads[checkingWorker]} with fitness {result}");
 						genomeDict.Remove(activeThreads[checkingWorker]);
 						activeThreads.Remove(checkingWorker);
 					}
 				}
 
-				if ((!activeThreads.ContainsKey(checkingWorker)) && nextGenomeId < genomes.Count)
+				if ((!activeThreads.ContainsKey(checkingWorker)) && genomesToCalculateFitness.Count > 0)
 				{
-					activeThreads.Add(checkingWorker, nextGenomeId);
-					SaveGenome(genomeDict[nextGenomeId], checkingWorker);
+					NeatGenome nextGenome = genomesToCalculateFitness.Dequeue();
+					activeThreads.Add(checkingWorker, nextGenome.Id);
+					SaveGenome(genomeDict[nextGenome.Id], checkingWorker);
 					var psi = new ProcessStartInfo
 					{
 						FileName = UNITY_PATH,
-						Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker}",// -logFile log_{checkingWorker}.txt",
+						Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -logFile log_{checkingWorker}.txt",
 						WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
 						UseShellExecute = false
 					};
 
 					Process.Start(psi);
-					nextGenomeId++;
 				}
+
 				checkingWorker = (checkingWorker + 1) % unityThreads;
 			}
-
-			List<double> returner = new List<double>();
-			foreach (var result in results)
-				returner.Add(JsonSerializer.Deserialize<double>(result.Value));
-
-			return returner;
 		}
 	}
 }
