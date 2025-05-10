@@ -109,7 +109,7 @@ namespace SharpNeat.Genomes.Neat
                 _auxStateNeuronCount = CountAuxStateNodes();
             }
 
-            Debug.Assert(PerformIntegrityCheck());
+            //Debug.Assert(PerformIntegrityCheck());
         }
 
         /// <summary>

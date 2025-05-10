@@ -4,8 +4,8 @@ using UnityEngine.Rendering;
 
 public class RaycastHitting : MonoBehaviour, IGetInputs
 {
-    public int horizontalRays = 10;
-    public int verticalRays = 6;
+    public int horizontalRays = 2;
+    public int verticalRays = 3;
     public float horizontalAngle = 60f;
     public float verticalAngle = 120f;
     public float sensorMaxDistance = 200f;

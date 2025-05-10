@@ -416,6 +416,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4f8cfc0acc5e34cbd688266a79c00e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &145072032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145072015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ea1fcfcaba9c53429678e213fdc869f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &182825909
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,7 +873,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 930691705}
-  - component: {fileID: 930691704}
+  - component: {fileID: 930691706}
   m_Layer: 0
   m_Name: SimManager
   m_TagString: Untagged
@@ -869,24 +881,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &930691704
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 930691703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d8bb75b841fa0a44bb08e40990c87c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  totalGenerations: 100
-  populationSize: 50
-  simulationTimeLimit: 5
-  simulationSceneName: Drone_tests
-  dronePrefab: {fileID: 306900639}
-  droneController: {fileID: 306900641}
 --- !u!4 &930691705
 Transform:
   m_ObjectHideFlags: 0
@@ -902,6 +896,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &930691706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930691703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b4058453bc0db42a0d65edff7a6dbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drone: {fileID: 306900641}
+  droneObject: {fileID: 145072015}
 --- !u!1 &981680214
 GameObject:
   m_ObjectHideFlags: 0
@@ -1688,6 +1696,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1749469876035402, guid: 8b826a7c5dffaf04d99fa3f39f8d9060, type: 3}
       insertIndex: -1
       addedObject: {fileID: 145072027}
+    - targetCorrespondingSourceObject: {fileID: 1749469876035402, guid: 8b826a7c5dffaf04d99fa3f39f8d9060, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 145072032}
   m_SourcePrefab: {fileID: 100100000, guid: 8b826a7c5dffaf04d99fa3f39f8d9060, type: 3}
 --- !u!1 &1533923997
 GameObject:

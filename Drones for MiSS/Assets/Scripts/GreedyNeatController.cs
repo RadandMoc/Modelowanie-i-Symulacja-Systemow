@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -24,6 +25,8 @@ namespace Assets.Scripts
         {
             double maxValue = double.MinValue;
             int bestIndex = -1;
+            Debug.Log($"wyjsciowe {outputSignals.Length}");
+            Debug.Log($"moje {_outputs.Length}");
             for (int i = 0; i < _outputs.Length; i++)
             {
                 if (outputSignals[i] > maxValue)

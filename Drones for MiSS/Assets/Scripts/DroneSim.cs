@@ -5,6 +5,9 @@ using System.Collections;
 using Python.Runtime;
 using System.IO;
 using Assets.Scripts;
+using SharpNeat.Phenomes;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 public class DroneSim : MonoBehaviour
 {
@@ -16,12 +19,17 @@ public class DroneSim : MonoBehaviour
     byte key = 0x57; // W
 
 
-    private void Start()
+    public void Initialize(IBlackBox blackBox, List<IGetInputs> inputSources)
     {
-        /*
-        StartCoroutine(RandomKeyPressCoroutine());
-        */
+        
+
+        NeatActivation neatActivation = new NeatActivation(blackBox, inputSources);
+        controller = new GreedyNeatController(neatActivation, new DroneMove[] { DroneMove.Forward, DroneMove.Backward, DroneMove.Leftward, DroneMove.Rightward, 
+            DroneMove.Upward, DroneMove.Downward, DroneMove.RotateLeftward, DroneMove.BarrelRollRight  });
+
+
     }
+
 
     public void ClickKey() 
     {

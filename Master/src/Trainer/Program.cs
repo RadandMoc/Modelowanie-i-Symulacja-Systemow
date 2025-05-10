@@ -9,21 +9,21 @@ namespace Trainer
 {
 	internal class Program
 	{
-		static NeatGenomeFactory CreateGenomeFactory()
+		static NeatGenomeFactory CreateGenomeFactory(int inputNeuronCount, int outputNeuronCount)
 		{
 			//var activationFnLibrary = SharpNeat.Network.ActivationFunctions.DefaultActivationFunctionLibrary.CreateLibraryNeat();
 			var activationFnLibrary = DefaultActivationFunctionLibrary.CreateLibraryNeat(new ReLU());
-			return new NeatGenomeFactory(inputNeuronCount: 2, outputNeuronCount: 1, activationFnLibrary);
+			return new NeatGenomeFactory(inputNeuronCount, outputNeuronCount, activationFnLibrary);
 		}
 
 		static void Main(string[] args)
 		{
 			List<NeatGenome> genomes = new List<NeatGenome>();
-			NeatGenomeFactory genomeFactory = CreateGenomeFactory();
+			NeatGenomeFactory genomeFactory = CreateGenomeFactory( 6 * 4 + 9 , 8);
 
 			for (uint i = 0; i < 10; i++)
 			{
-				genomes.Add(GenerateFakeNeatGenome(genomeFactory, i));
+				genomes.Add(GenerateNeat(genomeFactory, i));
 			}
 
 			Console.WriteLine($"Utworzono {genomes.Count} genomów do symulacji.");
@@ -48,6 +48,43 @@ namespace Trainer
 			Console.WriteLine("\nNaciśnij dowolny klawisz, aby zakończyć...");
 			Console.ReadKey();
 		}
+
+
+		static NeatGenome GenerateNeat(NeatGenomeFactory factory, uint genomeId) 
+		{
+            int input_num_of_neurons = factory.InputNeuronCount;
+            int output_numt_of_neurons = factory.OutputNeuronCount;
+
+
+
+            var neuronGeneList = new NeuronGeneList(input_num_of_neurons + output_numt_of_neurons);
+			for (uint i = 0; i < input_num_of_neurons; i++) 
+			{
+                neuronGeneList.Add(new NeuronGene(i, NodeType.Input, 0));
+            }
+
+            for (uint i = (uint)input_num_of_neurons; i < input_num_of_neurons + output_numt_of_neurons; i++)
+            {
+                neuronGeneList.Add(new NeuronGene(i, NodeType.Output, 0));
+            }
+
+            var connectionGeneList = new ConnectionGeneList(input_num_of_neurons * output_numt_of_neurons);
+            Random random = new Random();
+            for (uint i = 0; i < input_num_of_neurons; i++)
+            {
+                for (uint j = (uint)input_num_of_neurons; j < input_num_of_neurons + output_numt_of_neurons; j++)
+                {
+                    uint connId = factory.InnovationIdGenerator.NextId;
+                    connectionGeneList.Add(new ConnectionGene(connId, i, j, random.NextDouble()));
+                }
+            }
+
+
+
+            var genome = new NeatGenome(factory, genomeId, 0, neuronGeneList, connectionGeneList, factory.InputNeuronCount, factory.OutputNeuronCount, true);
+            // Fabryka powinna zainicjalizować EvaluationInfo. Nie musimy nic więcej robić.
+            return genome;
+        }
 
 		static NeatGenome GenerateFakeNeatGenome(NeatGenomeFactory factory, uint genomeId)
 		{

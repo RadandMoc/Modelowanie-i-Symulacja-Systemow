@@ -34,6 +34,7 @@ public class MainSimulation : MonoBehaviour
     [SerializeField]
     private DroneSim droneController ; // Referencja do kontrolera aktywnego drona
 
+
     private IFitnessFunction fitnessFunction;
 
     // --- Singleton Pattern (Opcjonalny, ale pomocny) ---
@@ -73,6 +74,17 @@ public class MainSimulation : MonoBehaviour
             Debug.Log($"Ładowanie sceny symulacji: {simulationSceneName}");
             SceneManager.LoadScene(simulationSceneName);
             // Coroutine RunSimulationCycle zostanie wywołana w Start() po załadowaniu nowej sceny
+        }
+    }
+
+
+    IEnumerator RunSimulation() 
+    {
+        float simulationStartTime = Time.time;
+        while (Time.time - simulationStartTime < simulationTimeLimit)
+        {
+            droneController.ClickKey(); 
+            yield return null; // Poczekaj na następną klatkę
         }
     }
 

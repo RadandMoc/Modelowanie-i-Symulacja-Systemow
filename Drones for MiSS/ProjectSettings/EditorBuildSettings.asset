@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Drone_tests.unity
     guid: f75408471d44a8245bc8737d8ac5c1f2
-  - enabled: 1
+  - enabled: 0
     path: Assets/Drones/_Drone_DemoScene.unity
     guid: 2de57fc4db07e5e46bc537e262c6e911
   m_configObjects:

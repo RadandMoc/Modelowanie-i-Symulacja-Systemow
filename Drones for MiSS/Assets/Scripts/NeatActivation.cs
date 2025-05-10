@@ -1,9 +1,11 @@
 ﻿using SharpNeat.Phenomes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -12,15 +14,15 @@ namespace Assets.Scripts
         IBlackBox blackBox;
         private List<IGetInputs> inputSources;
 
-        public NeatActivation(IBlackBox blackBox)
+        public NeatActivation(IBlackBox blackBox, List<IGetInputs> inputs)
         {
             this.blackBox = blackBox;
+            this.inputSources = inputs;
         }
 
 
         private void ReadInputs() 
         {
-            blackBox.ResetState();
             double[] inputs = inputSources.SelectMany(x => x.GetInputs()).ToArray();
             int inputsCount = inputSources.Sum(x => x.GetInputsCount());
             for (int i = 0; i < inputsCount; i++)
@@ -32,9 +34,10 @@ namespace Assets.Scripts
         public double[] Activate() 
         {
             ReadInputs();
+            UnityEngine.Debug.Log($"Input: {blackBox.InputSignalArray.Length}");
 
             blackBox.Activate();
-
+            UnityEngine.Debug.Log($"NeatActivation: {blackBox.OutputSignalArray.Length}");
             double[] outputs = new double[blackBox.OutputSignalArray.Length];
             for (int i = 0; i < blackBox.OutputSignalArray.Length; i++)
             {
