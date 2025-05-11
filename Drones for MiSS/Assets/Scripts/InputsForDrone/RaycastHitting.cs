@@ -86,6 +86,6 @@ public class RaycastHitting : MonoBehaviour, IGetInputs
 
     public int GetInputsCount()
     {
-        return 3;
+        return horizontalRays * verticalRays * 4;
     }
 }
