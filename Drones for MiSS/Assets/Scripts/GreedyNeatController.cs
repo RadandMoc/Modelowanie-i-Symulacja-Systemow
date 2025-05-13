@@ -25,14 +25,17 @@ namespace Assets.Scripts
 		{
 			double maxValue = double.MinValue;
 			int bestIndex = -1;
+			string neurons_val = "Wartosc z neuronu ";
 			for (int i = 0; i < _outputs.Length; i++)
 			{
+				neurons_val += $"{i} -> {outputSignals[i]} ";
 				if (outputSignals[i] > maxValue)
 				{
 					maxValue = outputSignals[i];
 					bestIndex = i;
 				}
 			}
+			Debug.Log(neurons_val);
 			return _outputs[bestIndex];
 		}
 	}

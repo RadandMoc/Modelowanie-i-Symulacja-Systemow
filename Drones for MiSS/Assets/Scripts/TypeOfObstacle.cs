@@ -19,5 +19,10 @@ namespace Assets.Scripts
         public double IsObstacle { get => isObstacle;}
         public double IsForClean { get => isForClean;}
         public double IsMovable { get => isMovable; }
+		
+		public void ChangeCleaning()
+		{
+			isForClean = 0.0f;
+		}
     }
 }

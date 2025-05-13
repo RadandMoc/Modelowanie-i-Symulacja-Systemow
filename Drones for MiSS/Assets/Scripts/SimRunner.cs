@@ -17,24 +17,54 @@ public class SimRunner : MonoBehaviour
 {
 	private const string XmlElementNameNetwork = "Network";
 
+	private static float simulationTimeLimit = 10f;
+
 	[SerializeField]
 	private DroneSim drone;
 
 	[SerializeField]
-	private static float simulationTimeLimit = 10f;
+	private GameObject droneObject;
+	
+	[SerializeField]
+	private GameObject funcObject;
+
+	
+	private IFitnessFunction fitnessFunc;
 
 	[SerializeField]
-	private GameObject droneObject;
+	private MultiCollisionBehaviour collisionBehaviour;
+
+
 
 	private readonly int workerId = GetArg("-workerId", 0);
 
-	void Start()
+    int i = 0;
+
+    void Start()
 	{
 		//Debug.Log("SimRunner started");
+		fitnessFunc = funcObject.GetComponent<TraditionalFitnessCalculate>();
 		Run();
 	}
 
-	private void SaveResult(string path, double fitness)
+	void Update()
+    {
+        //Debug.Log("SimRunner update");
+		i++;
+		if (i < 1200)
+		{
+			drone.ClickKey();
+			i++;
+		}
+		else
+		{
+			drone.ReleaseKey();
+			Debug.Log(fitnessFunc.Evaluate());
+			Application.Quit();
+		}
+    }
+
+    private void SaveResult(string path, double fitness)
 	{
 		try
 		{
@@ -156,7 +186,7 @@ public class SimRunner : MonoBehaviour
 
 		SaveResult(Path.Combine(currentDir, "result.json"), fitness);
 		//Debug.Log($"[Worker {workerId}] Zamykanie aplikacji.");
-		Application.Quit();
+		//Application.Quit();
 
 	}
 
@@ -184,7 +214,6 @@ public class SimRunner : MonoBehaviour
 
 		IGetInputs droneKinematics = obj.GetComponent<DroneKinematics>();
 		IGetInputs raycastHititng = obj.GetComponent<RaycastHitting>();
-		Debug.Log(drone is null);
 
 		drone.Initialize(phenome, new List<IGetInputs>() { droneKinematics, raycastHititng });
 

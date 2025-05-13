@@ -34,10 +34,7 @@ namespace Assets.Scripts
         public double[] Activate() 
         {
             ReadInputs();
-            UnityEngine.Debug.Log($"Input: {blackBox.InputSignalArray.Length}");
-
             blackBox.Activate();
-            UnityEngine.Debug.Log($"NeatActivation: {blackBox.OutputSignalArray.Length}");
             double[] outputs = new double[blackBox.OutputSignalArray.Length];
             for (int i = 0; i < blackBox.OutputSignalArray.Length; i++)
             {

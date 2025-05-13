@@ -43,6 +43,8 @@ public class DroneKinematics : MonoBehaviour, IGetInputs
         Vector3 currentRotationEuler = transform.eulerAngles;
         Vector3 calculatedVelocityNow;
 
+        Debug.Log(currentPosition);
+
         float currentTime = Time.time;
         float deltaTimeSinceLastCall = currentTime - lastTimeVelocityWasCalculated;
 

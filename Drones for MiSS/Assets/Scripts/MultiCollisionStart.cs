@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class MultiCollisionBehaviour : MonoBehaviour
 {
-    private Dictionary<string, float> totalCollisionTimeByName = new Dictionary<string, float>();
+    private Dictionary<string, double> totalCollisionTimeByName = new Dictionary<string, double>();
     // S³ownik przechowuj¹cy listê czasów rozpoczêcia kolizji dla obiektu o danej nazwie
-    private Dictionary<string, List<float>> collisionStartTimesByName = new Dictionary<string, List<float>>();
+    private Dictionary<string, List<double>> collisionStartTimesByName = new Dictionary<string, List<double>>();
 
     private void OnCollisionEnter(Collision collision)
     {
         string name = collision.gameObject.name;
         if (!collisionStartTimesByName.ContainsKey(name))
         {
-            collisionStartTimesByName[name] = new List<float>();
+            collisionStartTimesByName[name] = new List<double>();
         }
         collisionStartTimesByName[name].Add(Time.time);
     }
@@ -22,10 +22,10 @@ public class NewMonoBehaviourScript : MonoBehaviour
         string name = collision.gameObject.name;
         if (collisionStartTimesByName.ContainsKey(name) && collisionStartTimesByName[name].Count > 0)
         {
-            float startTime = collisionStartTimesByName[name][0];
+            double startTime = collisionStartTimesByName[name][0];
             collisionStartTimesByName[name].RemoveAt(0);
 
-            float duration = Time.time - startTime;
+            double duration = Time.time - startTime;
 
             if (!totalCollisionTimeByName.ContainsKey(name))
             {
@@ -35,5 +35,15 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
             Debug.Log("Kolizja z obiektem " + name + " trwa³a: " + duration + " sekund. £¹czny czas: " + totalCollisionTimeByName[name] + " sekund.");
         }
+    }
+
+    public double CalculateAllCollisionTime() 
+    {
+        double totalCollisionTime = 0f;
+        foreach (var entry in totalCollisionTimeByName)
+        {
+            totalCollisionTime += entry.Value;
+        }
+        return totalCollisionTime;
     }
 }

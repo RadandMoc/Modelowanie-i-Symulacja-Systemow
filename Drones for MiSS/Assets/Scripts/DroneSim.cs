@@ -16,13 +16,14 @@ public class DroneSim : MonoBehaviour
 	private bool isHeadless;
 	private IMakeAction controller = new RandomController();
 	byte key = 0x57; // W
-
+	[SerializeField]
+	SprayBehaviour spray;
 
 	public void Initialize(IBlackBox blackBox, List<IGetInputs> inputSources)
 	{
 		NeatActivation neatActivation = new NeatActivation(blackBox, inputSources);
-		controller = new GreedyNeatController(neatActivation, new DroneMove[] { DroneMove.Forward, DroneMove.Backward, DroneMove.Leftward, DroneMove.Rightward,
-			DroneMove.Upward, DroneMove.Downward, DroneMove.RotateLeftward, DroneMove.BarrelRollRight  });
+		controller = new GreedyNeatController(neatActivation, new DroneMove[] { DroneMove.Spray, DroneMove.Backward, DroneMove.Leftward, DroneMove.Rightward,
+			DroneMove.Upward, DroneMove.Downward, DroneMove.Forward, DroneMove.RotateRightward  });
 	}
 
 	public void ReleaseKey() => KeyboardSimulator.ReleaseKey(key);
@@ -30,8 +31,16 @@ public class DroneSim : MonoBehaviour
 	public void ClickKey()
 	{
 		KeyboardSimulator.ReleaseKey(key);
-		key = DroneMoveKeyMapping.GetKeyCode(controller.MakeAction());
-		KeyboardSimulator.PressKey(key);
+		DroneMove move = controller.MakeAction();
+		if (move != DroneMove.Spray) 
+		{
+            key = DroneMoveKeyMapping.GetKeyCode(controller.MakeAction());
+            KeyboardSimulator.PressKey(key);
+        }
+		else 
+		{
+			spray.Spray();
+        }
 	}
 
 	private IEnumerator RandomKeyPressCoroutine()

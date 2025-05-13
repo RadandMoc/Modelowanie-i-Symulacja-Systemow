@@ -19,6 +19,8 @@ namespace Assets.Scripts
         BarrelRollRight,
         BarrelRollLeft,
         SwingRight,
-        SwingLeft
+        SwingLeft,
+        Spray,
+        DoNothing
     }
 }
