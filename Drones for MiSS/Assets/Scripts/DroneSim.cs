@@ -31,11 +31,16 @@ public class DroneSim : MonoBehaviour
 	public void ClickKey()
 	{
 		KeyboardSimulator.ReleaseKey(key);
-		DroneMove move = controller.MakeAction();
-		if (move == DroneMove.DoNothing) return;
+		DroneMove move = controller.MakeAction();			
+		Debug.Log(move);
+
+		if (move == DroneMove.DoNothing)
+		{
+			return;
+		}
 		else if (move != DroneMove.Spray) 
 		{
-            key = DroneMoveKeyMapping.GetKeyCode(controller.MakeAction());
+            key = DroneMoveKeyMapping.GetKeyCode(move);
             KeyboardSimulator.PressKey(key);
         }
 		else 

@@ -180,10 +180,9 @@ public class SimRunner : MonoBehaviour
 		
 
 		// Wywo³anie logiki symulacji z gotowym fenotypem
-		double fitness = RunSimulationLogic(phenome, genome.Id, workerId);
+		InitializeDroneLogic(phenome, genome.Id, workerId);
 		//Debug.Log($"[Worker {workerId}] Logika symulacji zakoñczona. Fitness dla genomu ID [{genome.Id}]: {fitness}");
 
-		SaveResult(Path.Combine(currentDir, "result.json"), fitness);
 		//Debug.Log($"[Worker {workerId}] Zamykanie aplikacji.");
 		//Application.Quit();
 
@@ -206,7 +205,7 @@ public class SimRunner : MonoBehaviour
 		return defaultValue;
 	}
 
-	double RunSimulationLogic(IBlackBox phenome, uint genomeId, int workerId)
+	void InitializeDroneLogic(IBlackBox phenome, uint genomeId, int workerId)
 	{
 		//Debug.Log($"[Worker {workerId} | Genom {genomeId}] Wykonywanie logiki symulacji z fenotypem. Wejœcia: {phenome.InputCount}, Wyjœcia: {phenome.OutputCount}");
 		var obj = GameObject.Find("Drone_red");
@@ -216,92 +215,6 @@ public class SimRunner : MonoBehaviour
 
 		drone.Initialize(phenome, new List<IGetInputs>() { droneKinematics, raycastHititng });
 
-		try
-		{
-			// Zawsze resetuj stan przed now¹ ewaluacj¹, szczególnie dla sieci z pêtlami.
-			//phenome.ResetState();
-
-			// TODO: Zaimplementuj tutaj w³aœciw¹ logikê symulacji.
-			// Poni¿ej znajduje siê tylko przyk³ad i placeholder.
-
-			// 1. Przygotuj i ustaw sygna³y wejœciowe dla sieci
-			//    Upewnij siê, ¿e liczba sygna³ów odpowiada phenome.InputCount.
-			//    Przyk³ad dla dwóch wejœæ:
-			//    if (phenome.InputCount >= 2)
-			//    {
-			//        phenome.InputSignalArray[0] = jakaœ_wartoœæ_wejœciowa_1_z_symulacji;
-			//        phenome.InputSignalArray[1] = jakaœ_wartoœæ_wejœciowa_2_z_symulacji;
-			//    }
-			//    else if (phenome.InputCount == 1)
-			//    {
-			//        phenome.InputSignalArray[0] = jakaœ_wartoœæ_wejœciowa_1_z_symulacji;
-			//    }
-			//    else
-			//    {
-			//        //Debug.LogWarning($"[Worker {workerId} | Genom {genomeId}] Sieæ nie ma wejœæ (InputCount = 0).");
-			//    }
-
-
-			// 2. Aktywuj sieæ
-			//    Dla sieci "feedforward" (acyklicznych) zazwyczaj wystarczy jedna aktywacja.
-			//    Dla sieci cyklicznych, mo¿esz potrzebowaæ wielokrotnych aktywacji w pêtli,
-			//    zgodnie ze schematem aktywacji u¿ytym w dekoderze.
-			//    Jeœli u¿yto NetworkActivationScheme.CreateAcyclicScheme(), jedna aktywacja jest typowa.
-			// phenome.Activate();
-
-
-			// 3. Odczytaj sygna³y wyjœciowe z sieci
-			//    Upewnij siê, ¿e odczytujesz odpowiedni¹ liczbê wyjœæ (phenome.OutputCount).
-			//    Przyk³ad dla jednego wyjœcia:
-			//    double outputValue = 0.0;
-			//    if (phenome.OutputCount >= 1)
-			//    {
-			//        outputValue = phenome.OutputSignalArray[0];
-			//    }
-			//    else
-			//    {
-			//        //Debug.LogWarning($"[Worker {workerId} | Genom {genomeId}] Sieæ nie ma wyjœæ (OutputCount = 0).");
-			//    }
-
-			// 4. Oblicz fitness na podstawie wyników symulacji (np. outputValue, zachowanie agenta)
-
-			float simulationStartTime = Time.time;
-			int i = 0;
-			// Pozwól symulacji dzia³aæ przez okreœlony czas lub do zakoñczenia przez drona
-			while (Time.time - simulationStartTime < simulationTimeLimit && i < 1200)
-			{
-				drone.ClickKey(); // Wywo³aj metodê symuluj¹c¹ klawisz
-								  // Opcjonalnie: SprawdŸ, czy dron zakoñczy³ zadanie (np. dotar³ do celu, rozbi³ siê)
-				/*
-                if (activeDroneController.IsFinished())
-                {
-                    Debug.Log($"Dron {currentGenomeIndex} zakoñczy³ przed czasem.");
-                    break;
-                }
-                */
-				// Poczekaj na nastêpn¹ klatkê
-				i++;
-			}
-			drone.ReleaseKey();
-
-			Console.WriteLine($"[Worker {workerId} | Genom {genomeId}] Symulacja zakoñczona. Czas: {Time.time - simulationStartTime} sekund.");
-			double calculatedFitness = UnityEngine.Random.Range(0f, 100f); // Placeholder
-																		   //Debug.Log($"[Worker {workerId} | Genom {genomeId}] Placeholder symulacji wykonany. Obliczony fitness: {calculatedFitness}.");
-
-			// SprawdŸ, czy stan sieci jest nadal wa¿ny (szczególnie po aktywacji sieci cyklicznych)
-			if (!phenome.IsStateValid)
-			{
-				//Debug.LogWarning($"[Worker {workerId} | Genom {genomeId}] Stan fenotypu sta³ siê nieprawid³owy po aktywacji.");
-				// Mo¿esz chcieæ na³o¿yæ karê na fitness w takim przypadku.
-				// calculatedFitness *= 0.1; // Przyk³ad kary
-			}
-
-			return calculatedFitness;
-		}
-		catch (Exception ex)
-		{
-			Debug.LogError($"[Worker {workerId} | Genom {genomeId}] B³¹d podczas wykonywania symulacji z fenotypem. Wyj¹tek: {ex.ToString()}");
-			return 0.0; // Zwróæ niski (lub ujemny) fitness w przypadku b³êdu
-		}
+		
 	}
 }

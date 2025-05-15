@@ -23,6 +23,7 @@ namespace Assets.Scripts
 
         private void ReadInputs() 
         {
+            blackBox.ResetState();
             double[] inputs = inputSources.SelectMany(x => x.GetInputs()).ToArray();
             int inputsCount = inputSources.Sum(x => x.GetInputsCount());
             for (int i = 0; i < inputsCount; i++)
