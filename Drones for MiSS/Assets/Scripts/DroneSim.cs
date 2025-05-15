@@ -22,8 +22,8 @@ public class DroneSim : MonoBehaviour
 	public void Initialize(IBlackBox blackBox, List<IGetInputs> inputSources)
 	{
 		NeatActivation neatActivation = new NeatActivation(blackBox, inputSources);
-		controller = new GreedyNeatController(neatActivation, new DroneMove[] { DroneMove.Spray, DroneMove.Backward, DroneMove.Leftward, DroneMove.Rightward,
-			DroneMove.Upward, DroneMove.Downward, DroneMove.Forward, DroneMove.RotateRightward  });
+		controller = new GreedyNeatController(neatActivation, new DroneMove[] { DroneMove.Forward, DroneMove.Backward, DroneMove.Leftward, DroneMove.Rightward,
+			DroneMove.Upward, DroneMove.Downward, DroneMove.RotateLeftward, DroneMove.RotateRightward, DroneMove.Spray, DroneMove.DoNothing  });
 	}
 
 	public void ReleaseKey() => KeyboardSimulator.ReleaseKey(key);
@@ -32,7 +32,8 @@ public class DroneSim : MonoBehaviour
 	{
 		KeyboardSimulator.ReleaseKey(key);
 		DroneMove move = controller.MakeAction();
-		if (move != DroneMove.Spray) 
+		if (move == DroneMove.DoNothing) return;
+		else if (move != DroneMove.Spray) 
 		{
             key = DroneMoveKeyMapping.GetKeyCode(controller.MakeAction());
             KeyboardSimulator.PressKey(key);

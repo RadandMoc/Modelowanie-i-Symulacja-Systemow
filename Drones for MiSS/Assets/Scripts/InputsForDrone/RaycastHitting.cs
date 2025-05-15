@@ -14,7 +14,7 @@ public class RaycastHitting : MonoBehaviour, IGetInputs
 
     public double[] ConeRaycastSensors(Transform droneTransform, float maxDistance, int horizontalRays, int verticalRays, float horizontalAngle, float verticalAngle)
     {
-        double[] neuronValues = new double[horizontalRays * verticalRays * 4];
+        double[] neuronValues = new double[horizontalRays * verticalRays * 5];
         
 
         float horizontalStart = -horizontalAngle / 2f;
@@ -57,8 +57,10 @@ public class RaycastHitting : MonoBehaviour, IGetInputs
                 neuronValues[index + 1] = isObstacle;
                 neuronValues[index + 2] = isForClean;
                 neuronValues[index + 3] = isMovable;
+                neuronValues[index + 4] = 0.0;
 
-                index+=4;
+
+                index += 4;
             }
         }
 
