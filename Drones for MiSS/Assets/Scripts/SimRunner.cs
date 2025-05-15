@@ -34,7 +34,7 @@ public class SimRunner : MonoBehaviour
 	[SerializeField]
 	private MultiCollisionBehaviour collisionBehaviour;
 
-
+	private string currentDir;
 
 	private readonly int workerId = GetArg("-workerId", 0);
 
@@ -54,13 +54,12 @@ public class SimRunner : MonoBehaviour
 		if (i < 1200)
 		{
 			drone.ClickKey();
-			i++;
 		}
 		else
 		{
 			drone.ReleaseKey();
-			Debug.Log(fitnessFunc.Evaluate());
-			Application.Quit();
+            SaveResult(Path.Combine(currentDir, "result.json"), fitnessFunc.Evaluate());
+            Application.Quit();
 		}
     }
 
@@ -166,7 +165,7 @@ public class SimRunner : MonoBehaviour
 
 	public void Run()
 	{
-		string currentDir = Directory.GetCurrentDirectory();
+		currentDir = Directory.GetCurrentDirectory();
 
 		//Debug.Log($"[Worker {workerId}] Katalog roboczy: {currentDir}");
 		//Debug.Log($"[Worker {workerId}] Próba wczytania genomu z: {genomePath}");
