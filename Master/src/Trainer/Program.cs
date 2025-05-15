@@ -19,7 +19,8 @@ namespace Trainer
 		static void Main(string[] args)
 		{
 			List<NeatGenome> genomes = new List<NeatGenome>();
-			NeatGenomeFactory genomeFactory = CreateGenomeFactory( 6 * 4 + 9 , 8);
+			NeatGenomeFactory genomeFactory = CreateGenomeFactory( 6 * 5 + 9 , 10);
+			// 6 promieni, każdy z 5 neuronami (dystans, czy myć, czy karany za umycie, czy ruchome, czy uderzalne) + 9 o pozycji drona
 
 			for (uint i = 0; i < 10; i++)
 			{
