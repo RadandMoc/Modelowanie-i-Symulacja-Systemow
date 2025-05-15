@@ -13,6 +13,7 @@ namespace Trainer
 	internal class UnityCommunication
 	{
 		private int unityThreads;
+		public double LastBestFitness { get; private set; } = 0;
 		public static readonly string UNITY_PATH = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", @"UnitySim", "Drones for MiSS.exe");
 		public static readonly string WORKER_PATH = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", $"Workers/Worker_");
 		internal UnityCommunication(int unityThreads)
@@ -64,6 +65,7 @@ namespace Trainer
 
 		public void RunSimulations(ICollection<NeatGenome> genomes)
 		{
+			LastBestFitness = 0;
 			int checkingWorker = 0;
 			Dictionary<int, uint> activeThreads = new Dictionary<int, uint>(); // Key-no. worker, value-genome id
 			Dictionary<uint, NeatGenome> genomeDict = genomes.ToDictionary(g => g.Id); //key-genome id, value-genome
@@ -77,6 +79,7 @@ namespace Trainer
 					if (!Object.Equals(fitness, null))
 					{
 						double result = JsonSerializer.Deserialize<double>(fitness);
+						LastBestFitness = Math.Max(LastBestFitness, result);
 						File.Delete($"{WORKER_PATH}{checkingWorker}/result.json");
 						genomeDict[activeThreads[checkingWorker]].EvaluationInfo.SetFitness(result); //aktualizuj fitness
 						Console.WriteLine($"Worker {checkingWorker} finished processing genome {activeThreads[checkingWorker]} with fitness {result}");
