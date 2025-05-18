@@ -34,6 +34,12 @@ namespace Assets.Scripts
                             obs.ChangeCleaning();
                         }
                     }
+
+                    if (obs.IsNotForClean == 1.0) 
+                    {
+                        NotSpraybleObject notSpraybleObject = hit.collider.gameObject.GetComponent<NotSpraybleObject>();
+                        notSpraybleObject.ChangeSpray();
+                    }
                     
                 }
                 catch 

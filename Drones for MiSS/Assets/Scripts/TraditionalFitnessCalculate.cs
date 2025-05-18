@@ -11,18 +11,23 @@ namespace Assets.Scripts
     {
 		[SerializeField]
         private MultiCollisionBehaviour collisionDetector;
-		[SerializeField]
+		
+        [SerializeField]
         private List<SprayableObject> sprayableObjects;
+
+        [SerializeField]
+        private List<NotSpraybleObject> notSprayableObjects;
 
         public TraditionalFitnessCalculate(MultiCollisionBehaviour collisionDetector)
         {
             this.collisionDetector = collisionDetector;
+			Debug.Log("XD");
         }
 
         public double Evaluate()
         {
             double collision = collisionDetector.CalculateAllCollisionTime();
-            return -Math.Max(collision, collision * collision) + sprayableObjects.Sum(x => x.CalculateSprayResult());
+            return -Math.Max(collision, collision * collision) + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult());
         }
     }
 }

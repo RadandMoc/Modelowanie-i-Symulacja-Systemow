@@ -33,6 +33,7 @@ public class RaycastHitting : MonoBehaviour, IGetInputs
                 double isObstacle = 0;
                 double isForClean = 0;
                 double isMovable = 0;
+                double isNotForClean = 0;
                 double distance = maxDistance;
 
                 float horizontalOffset = horizontalStart + h * horizontalStep;
@@ -48,6 +49,7 @@ public class RaycastHitting : MonoBehaviour, IGetInputs
                         isObstacle = typeOfObstacle.IsObstacle;
                         isForClean = typeOfObstacle.IsForClean;
                         isMovable = typeOfObstacle.IsMovable;
+                        isNotForClean = typeOfObstacle.IsNotForClean;
                     }
                     distance = hit.distance;
                 }
@@ -57,7 +59,7 @@ public class RaycastHitting : MonoBehaviour, IGetInputs
                 neuronValues[index + 1] = isObstacle;
                 neuronValues[index + 2] = isForClean;
                 neuronValues[index + 3] = isMovable;
-                neuronValues[index + 4] = 0.0;
+                neuronValues[index + 4] = isNotForClean;
 
 
                 index += 4;

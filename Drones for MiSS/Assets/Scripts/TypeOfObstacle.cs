@@ -15,12 +15,15 @@ namespace Assets.Scripts
         private double isForClean;
         [SerializeField]
         private double isMovable;
+        [SerializeField]
+        private double isNotForClean;
 
         public double IsObstacle { get => isObstacle;}
         public double IsForClean { get => isForClean;}
         public double IsMovable { get => isMovable; }
-		
-		public void ChangeCleaning()
+        public double IsNotForClean { get => isNotForClean;}
+
+        public void ChangeCleaning()
 		{
 			isForClean = 0.0f;
 		}

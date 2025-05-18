@@ -377,6 +377,7 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 1
   isMovable: 1
+  isNotForClean: 0
 --- !u!1 &145072015 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1749469876035402, guid: 8b826a7c5dffaf04d99fa3f39f8d9060, type: 3}
@@ -455,6 +456,7 @@ GameObject:
   - component: {fileID: 182825912}
   - component: {fileID: 182825911}
   - component: {fileID: 182825914}
+  - component: {fileID: 182825915}
   m_Layer: 0
   m_Name: OutsideWindow
   m_TagString: Untagged
@@ -566,6 +568,20 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 0
   isMovable: 0
+  isNotForClean: 1
+--- !u!114 &182825915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182825909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce929f2cf2c256b41886dd2ada6f66ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weight: 1
 --- !u!1 &254390820
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,6 +618,7 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 1
   isMovable: 0
+  isNotForClean: 0
 --- !u!64 &254390822
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -875,6 +892,7 @@ GameObject:
   - component: {fileID: 333424765}
   - component: {fileID: 333424764}
   - component: {fileID: 333424767}
+  - component: {fileID: 333424768}
   m_Layer: 0
   m_Name: OutsideWindow
   m_TagString: Untagged
@@ -986,6 +1004,20 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 0
   isMovable: 0
+  isNotForClean: 1
+--- !u!114 &333424768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333424762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce929f2cf2c256b41886dd2ada6f66ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weight: 1
 --- !u!1 &407442644
 GameObject:
   m_ObjectHideFlags: 0
@@ -1037,6 +1069,7 @@ MonoBehaviour:
   - {fileID: 254390826}
   - {fileID: 535718028}
   - {fileID: 1756118106}
+  notSprayableObjects: []
 --- !u!1 &535718022
 GameObject:
   m_ObjectHideFlags: 0
@@ -1088,6 +1121,7 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 1
   isMovable: 0
+  isNotForClean: 0
 --- !u!64 &535718025
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1510,6 +1544,7 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 1
   isMovable: 1
+  isNotForClean: 0
 --- !u!1 &1103299953
 GameObject:
   m_ObjectHideFlags: 0
@@ -1619,6 +1654,7 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 0
   isMovable: 0
+  isNotForClean: 0
 --- !u!1 &1119017891
 GameObject:
   m_ObjectHideFlags: 0
@@ -1883,6 +1919,7 @@ GameObject:
   - component: {fileID: 1464338676}
   - component: {fileID: 1464338675}
   - component: {fileID: 1464338678}
+  - component: {fileID: 1464338679}
   m_Layer: 0
   m_Name: OutsideWindow
   m_TagString: Untagged
@@ -1994,6 +2031,20 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 0
   isMovable: 0
+  isNotForClean: 1
+--- !u!114 &1464338679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464338673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce929f2cf2c256b41886dd2ada6f66ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weight: 1
 --- !u!1001 &1472806388
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2087,6 +2138,7 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 1
   isMovable: 0
+  isNotForClean: 0
 --- !u!64 &1519878654
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2328,6 +2380,7 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 1
   isMovable: 1
+  isNotForClean: 0
 --- !u!1 &1656978403
 GameObject:
   m_ObjectHideFlags: 0
@@ -2414,6 +2467,7 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 0
   isMovable: 0
+  isNotForClean: 0
 --- !u!1 &1756118100
 GameObject:
   m_ObjectHideFlags: 0
@@ -2465,6 +2519,7 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 1
   isMovable: 0
+  isNotForClean: 0
 --- !u!64 &1756118103
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2628,6 +2683,7 @@ GameObject:
   - component: {fileID: 1830934444}
   - component: {fileID: 1830934443}
   - component: {fileID: 1830934446}
+  - component: {fileID: 1830934447}
   m_Layer: 0
   m_Name: OutsideWindow
   m_TagString: Untagged
@@ -2739,6 +2795,20 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 0
   isMovable: 0
+  isNotForClean: 1
+--- !u!114 &1830934447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830934441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce929f2cf2c256b41886dd2ada6f66ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weight: 1
 --- !u!1 &1859324793
 GameObject:
   m_ObjectHideFlags: 0
@@ -2775,6 +2845,7 @@ MonoBehaviour:
   isObstacle: 1
   isForClean: 1
   isMovable: 0
+  isNotForClean: 0
 --- !u!64 &1859324795
 MeshCollider:
   m_ObjectHideFlags: 0
