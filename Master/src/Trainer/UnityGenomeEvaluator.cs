@@ -13,7 +13,7 @@ namespace Trainer
 		private ulong _evalCount;
 		private UnityCommunication _unityCommunicator;
 		private Double _satisfyingFitness;
-		private static int HARDWARE_THREADS = Math.Max(1, Environment.ProcessorCount - 1);
+		private static int HARDWARE_THREADS = Math.Min(Math.Max(1, Environment.ProcessorCount - 1), 7);
 
 		public UnityGenomeEvaluator()
 		{
