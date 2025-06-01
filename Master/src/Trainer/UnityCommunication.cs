@@ -1,4 +1,5 @@
-﻿using SharpNeat.Genomes.Neat;
+﻿using SharpNeat.Core;
+using SharpNeat.Genomes.Neat;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +14,7 @@ namespace Trainer
 	internal class UnityCommunication
 	{
 		private int unityThreads;
+		private NeatGenomeFactory genomeFactory;
 		public double LastBestFitness { get; private set; } = 0;
 		public static readonly string UNITY_PATH = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", @"UnitySim", "Drones for MiSS.exe");
 		public static readonly string WORKER_PATH = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", $"Workers/Worker_");
@@ -44,7 +46,12 @@ namespace Trainer
 			}
 		}
 
-		private string? GetFitness(int workerId)
+		public void InitializeGenomeFactory(NeatGenomeFactory factory)
+        {
+            genomeFactory = factory;
+        }
+
+        private string? GetFitness(int workerId)
 		{
 			string resultPath = $"{WORKER_PATH}{workerId}/result.json";
 			if (!File.Exists(resultPath))
@@ -67,8 +74,26 @@ namespace Trainer
 		{
 			LastBestFitness = 0;
 			int checkingWorker = 0;
-			Dictionary<int, uint> activeThreads = new Dictionary<int, uint>(); // Key-no. worker, value-genome id
-			Dictionary<uint, NeatGenome> genomeDict = genomes.ToDictionary(g => g.Id); //key-genome id, value-genome
+
+     
+            Dictionary<int, uint> activeThreads = new Dictionary<int, uint>(); // Key-no. worker, value-genome id
+			HashSet<uint> numberOfGenomeWithId = new HashSet<uint>(); // Key-no. worker, value-number of genomes assigned to worker
+			List<NeatGenome> genomesToProcess = new List<NeatGenome>();
+			/*
+			foreach (var genome in genomes)
+			{
+				if (!numberOfGenomeWithId.Contains(genome.Id)) { 
+				genomesToProcess.Add(genome);
+				numberOfGenomeWithId.Add(genome.Id); }
+
+                else 
+				{
+					genomesToProcess.Add(genomeFactory.CreateGenomeCopy(genome, genomeFactory.NextGenomeId(), genome.BirthGeneration));
+				}
+            }
+			*/
+
+            Dictionary<uint, NeatGenome> genomeDict = genomes.ToDictionary(g => g.Id); //key-genome id, value-genome
 			Queue<NeatGenome> genomesToCalculateFitness = new(genomes); //[.. genomes];  genomes.ToList();
 
 			while (genomeDict.Count > 0)

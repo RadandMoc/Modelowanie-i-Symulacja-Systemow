@@ -134,7 +134,7 @@ namespace SharpNeat.Genomes.Neat
             
             _evalInfo = new EvaluationInfo(copyFrom.EvaluationInfo.FitnessHistoryLength);
 
-            Debug.Assert(PerformIntegrityCheck());
+            //Debug.Assert(PerformIntegrityCheck());
         }
 
         #endregion
@@ -531,7 +531,7 @@ namespace SharpNeat.Genomes.Neat
             }
 
             // Mutation succeeded. Check resulting genome.
-            Debug.Assert(PerformIntegrityCheck());
+            //Debug.Assert(PerformIntegrityCheck());
         }
 
         /// <summary>

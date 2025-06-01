@@ -556,6 +556,7 @@ namespace SharpNeat.EvolutionAlgorithms
                 for(int i=0; i<inst._offspringAsexualCount; i++)
                 {
                     int genomeIdx = DiscreteDistribution.Sample(_rng, dist);
+                    Console.WriteLine($"{genomeIdx}");
                     TGenome offspring = genomeList[genomeIdx].CreateOffspring(_currentGeneration);
                     offspringList.Add(offspring);
                 }

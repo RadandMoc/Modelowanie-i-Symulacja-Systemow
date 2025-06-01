@@ -12,34 +12,48 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Trainer
 {
 	public class NeatManager
 	{
 		private const int _saveInterval = 1;
-		private NeatEvolutionAlgorithm<NeatGenome> _ea;
-		private IGenomeListEvaluator<NeatGenome> _genomeListEvaluator = new UnityGenomeEvaluator();
+		private const string WORKER_PATH = "Best";
+        private const string GENERATION = "Generation";
+
+        private NeatEvolutionAlgorithm<NeatGenome> _ea;
+		private IGenomeListEvaluator<NeatGenome> _genomeListEvaluator;
 		private List<NeatGenome> _genomeList;
 		private IActivationFunctionLibrary _activationFnLibrary = DefaultActivationFunctionLibrary.CreateLibraryNeat(new ReLU());
 		private IGenomeFactory<NeatGenome> _genomeFactory;
-		// private readonly Stopwatch _stopwatch;
-		// private readonly INeatExperiment _experiment;
+		private NeatGenomeFactory _neatGenomeFactory;
+		private uint _savePopulationInterval;
 
-		public NeatManager(int populationSize)
+        // private readonly Stopwatch _stopwatch;
+        // private readonly INeatExperiment _experiment;
+
+        public bool IsRunning => _ea.RunState == RunState.Running;
+
+        public NeatManager(int populationSize, List<NeatGenome>? genomeList, uint savePopulationInterval = 3)
 		{
 			// _experiment = experiment;
 			// _stopwatch = new Stopwatch();
 			var eaParam = new NeatEvolutionAlgorithmParameters();
-			eaParam.SpecieCount = 10;
+			eaParam.SpecieCount = populationSize;
 			var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
 			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), complexityRegulationStrategy);
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;
-			_genomeFactory = new NeatGenomeFactory(6 * 5 + 9, 10, _activationFnLibrary);
-			_genomeList = GenerateStartGenomes(populationSize);
-		}
+            _neatGenomeFactory = new NeatGenomeFactory(6 * 5 + 9, 10, _activationFnLibrary);
+			_genomeFactory = _neatGenomeFactory;
+
+            _genomeListEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
+            _genomeList = GenerateStartGenomes(populationSize);
+			_savePopulationInterval = savePopulationInterval;
+
+        }
 		public NeatManager(string fileName)
 		{
 
@@ -47,24 +61,75 @@ namespace Trainer
 
 		private List<NeatGenome>? GenerateStartGenomes(int population)
 		{
-			throw new NotImplementedException();
-		}
+            List<NeatGenome> neatGenome = new List<NeatGenome>(population);
+			for (int i = 0; i < population; i++)
+                neatGenome.Add(NeatGenomeInitializer.GenerateNeat(_neatGenomeFactory));
+			return neatGenome;
+        }
 
 		public void Start()
 		{
 			_ea.Initialize(_genomeListEvaluator, _genomeFactory, _genomeList);
-			_ea.StartContinue();
+			
+            _ea.StartContinue();
+            
 		}
 
 		private void SaveToFile(object sender, EventArgs e)
 		{
-			NetworkDefinition network = new NetworkDefinition(
-				_ea.GenomeList[0].InputNodeCount,
-				_ea.GenomeList[0].OutputNodeCount,
-				_ea.)
-			string fileName = $"genome_{_ea.CurrentGeneration}.xml";
-			NetworkXmlIO.SaveComplete();
-			GenomeXmlIO.SaveGenome(_genomeList[0], fileName);
-		}
-	}
+
+            if ( _ea.CurrentGeneration % _savePopulationInterval == 0)
+            {
+                string filePopulationPath = Path.Combine(GENERATION, $"population{_ea.CurrentGeneration}.xml");
+                try
+                {
+                    using (XmlWriter xw = XmlWriter.Create(filePopulationPath, new XmlWriterSettings { Indent = true }))
+                    {
+                        NeatGenomeXmlIO.WriteComplete(xw, _ea.GenomeList, true);
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Błąd podczas zapisu populacji {_ea.CurrentGeneration}");
+                    // Rozważ logowanie błędu lub inną obsługę
+                }
+
+
+            }
+
+            var genome = _ea.GenomeList[0]; // Zakładamy, że zapisujemy tylko pierwszy genom
+            Directory.CreateDirectory(WORKER_PATH);
+		
+            string filePath = Path.Combine(WORKER_PATH, $"genome{_ea.CurrentGeneration}.xml");
+            try
+            {
+                using (XmlWriter xw = XmlWriter.Create(filePath, new XmlWriterSettings { Indent = true }))
+                {
+                    // Zakładamy, że nodeFnIds=true jest odpowiednie dla Twojego przypadku (często wymagane)
+                    // Jeśli nie potrzebujesz ID funkcji aktywacji dla węzłów, zmień na false.
+                    NeatGenomeXmlIO.Write(xw, genome, true); // - Użycie metody Write z NeatGenomeXmlIO
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Błąd podczas zapisu genomu {genome.Id}: {ex.Message}");
+                // Rozważ logowanie błędu lub inną obsługę
+            }
+
+        }
+
+        /*
+		 * public void SaveToFile(object sender, EventArgs e){
+        NetworkDefinition network = new NetworkDefinition(
+                _ea.GenomeList[0].InputNodeCount,
+                _ea.GenomeList[0].OutputNodeCount,
+                _activationFnLibrary, (NodeList)_ea.GenomeList[0].NodeList, _ea.GenomeList[0])
+
+            string fileName = $"genome_{_ea.CurrentGeneration}.xml";
+        NetworkXmlIO.SaveComplete();
+			GenomeXmlIO.SaveGenome(_genomeList[0], fileName);}
+		*/
+
+    }
 }

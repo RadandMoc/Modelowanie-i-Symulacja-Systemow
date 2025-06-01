@@ -12,10 +12,12 @@ namespace Trainer
 	{
 		private ulong _evalCount;
 		private UnityCommunication _unityCommunicator;
-		private Double _satisfyingFitness;
-		private static int HARDWARE_THREADS = Math.Min(Math.Max(1, Environment.ProcessorCount - 1), 7);
+		private Double? _satisfyingFitness = null;
+		//private static int HARDWARE_THREADS = Math.Min(Math.Max(1, Environment.ProcessorCount - 1), 7);
+		private static int HARDWARE_THREADS = 1;
 
-		public UnityGenomeEvaluator()
+
+        public UnityGenomeEvaluator(NeatGenomeFactory genomeFactory)
 		{
 			_evalCount = 0;
 			_unityCommunicator = new UnityCommunication(HARDWARE_THREADS);
@@ -42,7 +44,6 @@ namespace Trainer
 			_unityCommunicator = new UnityCommunication(threads);
 			_satisfyingFitness = wantedFitness;
 		}
-
 
 		public ulong EvaluationCount => _evalCount;
 
