@@ -14,20 +14,20 @@ namespace Trainer
 
 		static void Main(string[] args)
 		{
-			List<NeatGenome> genomes = new List<NeatGenome>();
 			NeatGenomeFactory genomeFactory = CreateGenomeFactory(6 * 5 + 9, 10);
 			// 6 promieni, każdy z 5 neuronami (dystans, czy myć, czy karany za umycie, czy ruchome, czy uderzalne) + 9 o pozycji drona
 
-			
+			int populationSize = 50; // Liczba genomów do wygenerowania
 
-			Console.WriteLine($"Utworzono {genomes.Count} genomów do symulacji.");
+			Console.WriteLine($"Utworzono {populationSize} genomów do symulacji.");
 
 			int numberOfUnityThreads = 4;
 			UnityCommunication unityComm = new UnityCommunication(numberOfUnityThreads);
 
-			NeatManager neatManager = new NeatManager(50, genomes);
-			
-            neatManager.Start();
+			NeatManager neatManager = new NeatManager(populationSize);
+			//NeatManager neatManager = new NeatManager("D:\\Repozytoria\\Modelowanie-i-Symulacja-Systemow\\Master\\src\\Trainer\\bin\\Debug\\net8.0\\Generation\\population24672250.xml");
+
+			neatManager.Start();
 
             while (neatManager.IsRunning)
             {

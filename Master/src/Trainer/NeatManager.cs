@@ -18,10 +18,10 @@ namespace Trainer
 {
 	public class NeatManager
 	{
+		#region fields
 		private const int _saveInterval = 1;
 		private const string WORKER_PATH = "Best";
         private const string GENERATION = "Generation";
-
         private NeatEvolutionAlgorithm<NeatGenome> _ea;
 		private IGenomeListEvaluator<NeatGenome> _genomeListEvaluator;
 		private List<NeatGenome> _genomeList;
@@ -30,12 +30,14 @@ namespace Trainer
 		private NeatGenomeFactory _neatGenomeFactory;
 		private uint _savePopulationInterval;
 
-        // private readonly Stopwatch _stopwatch;
-        // private readonly INeatExperiment _experiment;
+		// private readonly Stopwatch _stopwatch;
+		// private readonly INeatExperiment _experiment;
+		#endregion fields
 
-        public bool IsRunning => _ea.RunState == RunState.Running;
+		public bool IsRunning => _ea.RunState == RunState.Running;
 
-        public NeatManager(int populationSize, List<NeatGenome>? genomeList, uint savePopulationInterval = 3)
+		#region constructors
+		public NeatManager(int populationSize, uint savePopulationInterval = 3)
 		{
 			// _experiment = experiment;
 			// _stopwatch = new Stopwatch();
@@ -54,12 +56,50 @@ namespace Trainer
 			_savePopulationInterval = savePopulationInterval;
 
         }
-		public NeatManager(string fileName)
-		{
 
+		public NeatManager(List<NeatGenome> genomeList, uint savePopulationInterval = 3)
+		{
+			var eaParam = new NeatEvolutionAlgorithmParameters();
+			eaParam.SpecieCount = genomeList.Count;
+			var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
+			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), complexityRegulationStrategy);
+			UpdateScheme updateScheme = new UpdateScheme(1);
+			_ea.UpdateScheme = updateScheme;
+			_ea.UpdateEvent += SaveToFile;
+			_neatGenomeFactory = new NeatGenomeFactory(6 * 5 + 9, 10, _activationFnLibrary);
+			_genomeFactory = _neatGenomeFactory;
+
+			_genomeListEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
+			_genomeList = genomeList; //GenerateStartGenomes(genomeList.Count);
+			_savePopulationInterval = savePopulationInterval;
 		}
 
-		private List<NeatGenome>? GenerateStartGenomes(int population)
+		public NeatManager(string path, uint savePopulationInterval = 3)
+		{
+			_neatGenomeFactory = new NeatGenomeFactory(6 * 5 + 9, 10, _activationFnLibrary);
+			_genomeFactory = _neatGenomeFactory;
+			var genomes = LoadGenomes(path);
+			var eaParam = new NeatEvolutionAlgorithmParameters();
+			eaParam.SpecieCount = genomes.Count; // Domyślna liczba genomów, może być zmieniona w LoadFromFile
+			var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
+			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), complexityRegulationStrategy);
+			UpdateScheme updateScheme = new UpdateScheme(1);
+			_ea.UpdateScheme = updateScheme;
+			_ea.UpdateEvent += SaveToFile;
+			_genomeListEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
+			_genomeList = genomes; 
+			_savePopulationInterval = savePopulationInterval;
+		}
+		#endregion constructors
+
+		private List<NeatGenome> LoadGenomes(string path)
+		{
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.Load(path);
+			return NeatGenomeXmlIO.LoadCompleteGenomeList(xmlDoc, true, _neatGenomeFactory);
+		}
+
+		private List<NeatGenome> GenerateStartGenomes(int population)
 		{
             List<NeatGenome> neatGenome = new List<NeatGenome>(population);
 			for (int i = 0; i < population; i++)
