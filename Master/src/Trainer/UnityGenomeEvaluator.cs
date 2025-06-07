@@ -56,6 +56,11 @@ namespace Trainer
 			_evalCount++;
 		}
 
+		public void ClearWorkers()
+		{
+			_unityCommunicator.ClearWorkers();
+		}
+
 		public void Reset() { }
 	}
 }

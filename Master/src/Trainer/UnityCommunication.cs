@@ -46,6 +46,12 @@ namespace Trainer
 			}
 		}
 
+		public void ClearWorkers()
+		{
+			for (int i = 0; i < unityThreads; i++)
+				File.Delete($"{WORKER_PATH}{i}/result.json");
+		}
+
 		public void InitializeGenomeFactory(NeatGenomeFactory factory)
         {
             genomeFactory = factory;

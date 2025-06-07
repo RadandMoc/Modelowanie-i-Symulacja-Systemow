@@ -86,9 +86,11 @@ namespace Trainer
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;
-			_genomeListEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
+			var genomeEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
+			_genomeListEvaluator = genomeEvaluator;
 			_genomeList = genomes; 
 			_savePopulationInterval = savePopulationInterval;
+			genomeEvaluator.ClearWorkers();
 		}
 		#endregion constructors
 
