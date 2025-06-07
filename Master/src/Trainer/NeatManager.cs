@@ -77,16 +77,14 @@ namespace Trainer
 
 		private void SaveToFile(object sender, EventArgs e)
 		{
-
             if ( _ea.CurrentGeneration % _savePopulationInterval == 0)
             {
-                string filePopulationPath = Path.Combine(GENERATION, $"population{_ea.CurrentGeneration}.xml");
+                string filePopulationPath = Path.Combine(GENERATION, $"population{_ea.CurrentGeneration}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}.xml");
                 try
                 {
                     using (XmlWriter xw = XmlWriter.Create(filePopulationPath, new XmlWriterSettings { Indent = true }))
                     {
                         NeatGenomeXmlIO.WriteComplete(xw, _ea.GenomeList, true);
-
                     }
                 }
                 catch (Exception ex)
@@ -94,14 +92,12 @@ namespace Trainer
                     Console.WriteLine($"Błąd podczas zapisu populacji {_ea.CurrentGeneration}");
                     // Rozważ logowanie błędu lub inną obsługę
                 }
-
-
             }
 
             var genome = _ea.GenomeList[0]; // Zakładamy, że zapisujemy tylko pierwszy genom
             Directory.CreateDirectory(WORKER_PATH);
 		
-            string filePath = Path.Combine(WORKER_PATH, $"genome{_ea.CurrentGeneration}.xml");
+            string filePath = Path.Combine(WORKER_PATH, $"genome{_ea.CurrentGeneration}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}.xml");
             try
             {
                 using (XmlWriter xw = XmlWriter.Create(filePath, new XmlWriterSettings { Indent = true }))
@@ -116,7 +112,6 @@ namespace Trainer
                 Console.WriteLine($"Błąd podczas zapisu genomu {genome.Id}: {ex.Message}");
                 // Rozważ logowanie błędu lub inną obsługę
             }
-
         }
 
         /*
