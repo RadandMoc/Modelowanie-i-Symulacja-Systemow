@@ -8,6 +8,7 @@ using Assets.Scripts;
 using SharpNeat.Phenomes;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Assets.Scripts.DroneBehaviour;
 
 public class DroneSim : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class DroneSim : MonoBehaviour
 	byte key = 0x57; // W
 	[SerializeField]
 	SprayBehaviour spray;
+    [SerializeField]
+    DroneActions droneActions;
+
 
 	public void Initialize(IBlackBox blackBox, List<IGetInputs> inputSources)
 	{
@@ -30,7 +34,7 @@ public class DroneSim : MonoBehaviour
 
 	public void ClickKey()
 	{
-		KeyboardSimulator.ReleaseKey(key);
+		//KeyboardSimulator.ReleaseKey(key);
 		DroneMove move = controller.MakeAction();			
 		Debug.Log(move);
 
@@ -40,8 +44,11 @@ public class DroneSim : MonoBehaviour
 		}
 		else if (move != DroneMove.Spray) 
 		{
+            /*
             key = DroneMoveKeyMapping.GetKeyCode(move);
             KeyboardSimulator.PressKey(key);
+			*/
+            droneActions.MakeAction(move);
         }
 		else 
 		{

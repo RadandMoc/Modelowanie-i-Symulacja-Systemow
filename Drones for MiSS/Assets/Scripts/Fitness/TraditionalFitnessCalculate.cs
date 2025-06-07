@@ -27,7 +27,7 @@ namespace Assets.Scripts
         public double Evaluate()
         {
             double collision = collisionDetector.CalculateAllCollisionTime();
-            return -Math.Max(collision, collision * collision) + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult());
+            return Math.Max(0.0, 100 + -Math.Max(collision, collision * collision) + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
         }
     }
 }

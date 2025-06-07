@@ -22,8 +22,7 @@ public class SimRunner : MonoBehaviour
 	[SerializeField]
 	private DroneSim drone;
 
-	[SerializeField]
-	private GameObject droneObject;
+
 	
 	[SerializeField]
 	private GameObject funcObject;
@@ -51,13 +50,14 @@ public class SimRunner : MonoBehaviour
     {
         //Debug.Log("SimRunner update");
 		i++;
-		if (i < 12000)
+		if (i < 1200)
 		{
 			drone.ClickKey();
 		}
 		else
 		{
 			drone.ReleaseKey();
+			Debug.Log(fitnessFunc.Evaluate());
             SaveResult(Path.Combine(currentDir, "result.json"), fitnessFunc.Evaluate());
             Application.Quit();
 		}
@@ -215,6 +215,5 @@ public class SimRunner : MonoBehaviour
 
 		drone.Initialize(phenome, new List<IGetInputs>() { droneKinematics, raycastHititng });
 
-		
 	}
 }

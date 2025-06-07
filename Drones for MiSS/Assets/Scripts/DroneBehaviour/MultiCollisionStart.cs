@@ -3,29 +3,32 @@ using UnityEngine;
 
 public class MultiCollisionBehaviour : MonoBehaviour
 {
-    private Dictionary<string, double> totalCollisionTimeByName = new Dictionary<string, double>();
-    // S³ownik przechowuj¹cy listê czasów rozpoczêcia kolizji dla obiektu o danej nazwie
-    private Dictionary<string, List<double>> collisionStartTimesByName = new Dictionary<string, List<double>>();
+    private Dictionary<string, float> totalCollisionTimeByName = new Dictionary<string, float>();
+
+    private Dictionary<string, List<float>> collisionStartTimesByName = new Dictionary<string, List<float>>();
 
     private void OnCollisionEnter(Collision collision)
     {
         string name = collision.gameObject.name;
         if (!collisionStartTimesByName.ContainsKey(name))
         {
-            collisionStartTimesByName[name] = new List<double>();
+            collisionStartTimesByName[name] = new List<float>();
         }
+
         collisionStartTimesByName[name].Add(Time.time);
     }
 
     private void OnCollisionExit(Collision collision)
     {
         string name = collision.gameObject.name;
+
+
         if (collisionStartTimesByName.ContainsKey(name) && collisionStartTimesByName[name].Count > 0)
         {
-            double startTime = collisionStartTimesByName[name][0];
+            float startTime = collisionStartTimesByName[name][0];
             collisionStartTimesByName[name].RemoveAt(0);
 
-            double duration = Time.time - startTime;
+            float duration = Time.time - startTime;
 
             if (!totalCollisionTimeByName.ContainsKey(name))
             {
@@ -33,17 +36,34 @@ public class MultiCollisionBehaviour : MonoBehaviour
             }
             totalCollisionTimeByName[name] += duration;
 
-            Debug.Log("Kolizja z obiektem " + name + " trwa³a: " + duration + " sekund. £¹czny czas: " + totalCollisionTimeByName[name] + " sekund.");
+            Debug.Log("Kolizja z obiektem " + name + " zakoñczy³a siê. Trwa³a: " + duration.ToString("F2") + "s. £¹czny czas: " + totalCollisionTimeByName[name].ToString("F2") + "s.");
         }
     }
 
-    public double CalculateAllCollisionTime() 
+
+    public float CalculateAllCollisionTime()
     {
-        double totalCollisionTime = 0f;
-        foreach (var entry in totalCollisionTimeByName)
+        float totalTime = 0f;
+        foreach (float completedDuration in totalCollisionTimeByName.Values)
         {
-            totalCollisionTime += entry.Value;
+            totalTime += completedDuration;
+			Debug.Log(completedDuration);
         }
-        return totalCollisionTime;
+
+
+        float currentTime = Time.time;
+
+        foreach (var entry in collisionStartTimesByName)
+        {
+
+            foreach (float startTime in entry.Value)
+            {
+                totalTime += (currentTime - startTime);
+				Debug.Log(totalTime);
+
+            }
+        }
+
+        return totalTime;
     }
 }

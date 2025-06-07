@@ -25,7 +25,7 @@ namespace Trainer
 			int numberOfUnityThreads = 4;
 			UnityCommunication unityComm = new UnityCommunication(numberOfUnityThreads);
 
-			NeatManager neatManager = new NeatManager(10, genomes);
+			NeatManager neatManager = new NeatManager(50, genomes);
 			
             neatManager.Start();
 

@@ -121,8 +121,9 @@ namespace Trainer
 					var psi = new ProcessStartInfo
 					{
 						FileName = UNITY_PATH,
-						Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -logFile log_{checkingWorker}.txt",
-						WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
+                        Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -logFile log_{checkingWorker}.txt",
+                        //Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode borderless",
+                        WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
 						UseShellExecute = false
 					};
 
@@ -130,6 +131,7 @@ namespace Trainer
 				}
 
 				checkingWorker = (checkingWorker + 1) % unityThreads;
+				Thread.Sleep(25); 
 			}
 		}
 	}
