@@ -51,11 +51,12 @@ namespace Trainer
             _neatGenomeFactory = new NeatGenomeFactory(6 * 5 + 9, 10, _activationFnLibrary);
 			_genomeFactory = _neatGenomeFactory;
 
-            _genomeListEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
-            _genomeList = GenerateStartGenomes(populationSize);
+			var genomeEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
+			_genomeListEvaluator = genomeEvaluator;
+			_genomeList = GenerateStartGenomes(populationSize);
 			_savePopulationInterval = savePopulationInterval;
-
-        }
+			genomeEvaluator.ClearWorkers();
+		}
 
 		public NeatManager(List<NeatGenome> genomeList, uint savePopulationInterval = 3)
 		{
@@ -69,9 +70,11 @@ namespace Trainer
 			_neatGenomeFactory = new NeatGenomeFactory(6 * 5 + 9, 10, _activationFnLibrary);
 			_genomeFactory = _neatGenomeFactory;
 
-			_genomeListEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
+			var genomeEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
+			_genomeListEvaluator = genomeEvaluator;
 			_genomeList = genomeList; //GenerateStartGenomes(genomeList.Count);
 			_savePopulationInterval = savePopulationInterval;
+			genomeEvaluator.ClearWorkers();
 		}
 
 		public NeatManager(string path, uint savePopulationInterval = 3)
