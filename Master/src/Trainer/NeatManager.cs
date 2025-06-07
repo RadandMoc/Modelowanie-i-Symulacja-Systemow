@@ -138,9 +138,10 @@ namespace Trainer
                     // Rozważ logowanie błędu lub inną obsługę
                 }
             }
-			var genome = _ea.GenomeList.Max<NeatGenome>(g => g.EvaluationInfo.Fitness);
+			double genomeVal = _ea.GenomeList.Max<NeatGenome>(g => g.EvaluationInfo.Fitness);
+			var genome = _ea.GenomeList.FirstOrDefault<NeatGenome>(g => g.EvaluationInfo.Fitness == genomeVal);
 			//var genome = _ea.GenomeList[0]; // Zakładamy, że zapisujemy tylko pierwszy genom
-            Directory.CreateDirectory(WORKER_PATH);
+			Directory.CreateDirectory(WORKER_PATH);
 		
             string filePath = Path.Combine(WORKER_PATH, $"genome{_ea.CurrentGeneration}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}.xml");
             try
