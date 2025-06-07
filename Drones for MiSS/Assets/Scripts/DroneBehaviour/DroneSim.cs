@@ -36,7 +36,7 @@ public class DroneSim : MonoBehaviour
 	{
 		//KeyboardSimulator.ReleaseKey(key);
 		DroneMove move = controller.MakeAction();			
-		Debug.Log(move);
+		//Debug.Log(move);
 
 		if (move == DroneMove.DoNothing)
 		{

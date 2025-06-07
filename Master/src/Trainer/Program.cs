@@ -31,7 +31,7 @@ namespace Trainer
 
             while (neatManager.IsRunning)
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
             }
 
             Console.WriteLine($"Uruchamianie symulacji na {numberOfUnityThreads} wątkach...");

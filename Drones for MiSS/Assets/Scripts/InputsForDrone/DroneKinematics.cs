@@ -44,7 +44,7 @@ public class DroneKinematics : MonoBehaviour, IGetInputs
         Vector3 calculatedVelocityNow;
 
         //
-        //Debug.Log(currentPosition);
+        Debug.Log($"pozycja {currentPosition}");
 
         float currentTime = Time.time;
         float deltaTimeSinceLastCall = currentTime - lastTimeVelocityWasCalculated;

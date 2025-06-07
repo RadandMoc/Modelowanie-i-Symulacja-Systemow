@@ -395,10 +395,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad108cca1d94f454eabe81efcc83d9b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontalRays: 3
-  verticalRays: 2
-  horizontalAngle: 120
-  verticalAngle: 60
+  horizontalSpreadAngle: 30
+  verticalLevelAngle: 15
   sensorMaxDistance: 200
 --- !u!4 &145072026 stripped
 Transform:
@@ -455,7 +453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d5c239fe81367040a484c7b246ded6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 20
   rotationSpeed: 90
 --- !u!1 &182825909
 GameObject:
@@ -832,6 +830,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c3d67df85cdf2904db4b914ddd22ad38, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: c3d67df85cdf2904db4b914ddd22ad38, type: 3}
+      propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

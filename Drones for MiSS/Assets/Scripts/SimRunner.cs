@@ -50,7 +50,7 @@ public class SimRunner : MonoBehaviour
     {
         //Debug.Log("SimRunner update");
 		i++;
-		if (i < 1200)
+		if (i < 120000)
 		{
 			drone.ClickKey();
 		}
