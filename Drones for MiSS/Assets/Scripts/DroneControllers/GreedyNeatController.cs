@@ -35,7 +35,6 @@ namespace Assets.Scripts
 					bestIndex = i;
 				}
 			}
-			Debug.Log(neurons_val);
 			return _outputs[bestIndex];
 		}
 	}

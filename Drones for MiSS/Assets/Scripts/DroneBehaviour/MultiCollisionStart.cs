@@ -36,7 +36,7 @@ public class MultiCollisionBehaviour : MonoBehaviour
             }
             totalCollisionTimeByName[name] += duration;
 
-            Debug.Log("Kolizja z obiektem " + name + " zakoñczy³a siê. Trwa³a: " + duration.ToString("F2") + "s. £¹czny czas: " + totalCollisionTimeByName[name].ToString("F2") + "s.");
+            //Debug.Log("Kolizja z obiektem " + name + " zakoñczy³a siê. Trwa³a: " + duration.ToString("F2") + "s. £¹czny czas: " + totalCollisionTimeByName[name].ToString("F2") + "s.");
         }
     }
 
@@ -47,7 +47,7 @@ public class MultiCollisionBehaviour : MonoBehaviour
         foreach (float completedDuration in totalCollisionTimeByName.Values)
         {
             totalTime += completedDuration;
-			Debug.Log(completedDuration);
+			//Debug.Log(completedDuration);
         }
 
 
@@ -59,7 +59,7 @@ public class MultiCollisionBehaviour : MonoBehaviour
             foreach (float startTime in entry.Value)
             {
                 totalTime += (currentTime - startTime);
-				Debug.Log(totalTime);
+				//Debug.Log(totalTime);
 
             }
         }
