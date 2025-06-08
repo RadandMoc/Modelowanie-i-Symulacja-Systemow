@@ -18,7 +18,12 @@ namespace Assets.Scripts
         [SerializeField]
         private List<NotSpraybleObject> notSprayableObjects;
 
-        private HashSet<Vector3> visitedPositions = new HashSet<Vector3>();
+        private HashSet<Vector3> visitedPositions;
+
+        private void Awake()
+        {
+            visitedPositions = new HashSet<Vector3>();
+        }
 
         private const int MIN_VISITED_POSITIONS = 100;
 
@@ -27,7 +32,8 @@ namespace Assets.Scripts
         public TraditionalFitnessCalculate(MultiCollisionBehaviour collisionDetector)
         {
             this.collisionDetector = collisionDetector;
-			Debug.Log("XD");
+            visitedPositions = new HashSet<Vector3>();
+            Debug.Log("XD");
         }
 
         /*
