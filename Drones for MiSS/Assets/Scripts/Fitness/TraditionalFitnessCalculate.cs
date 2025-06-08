@@ -18,11 +18,32 @@ namespace Assets.Scripts
         [SerializeField]
         private List<NotSpraybleObject> notSprayableObjects;
 
+        private const double ACCEPTABLE_NORMALIZED_ENTROPY = 0.83;
+
+        private const double ENTROPY_PENALTY_FACTOR = 30.0;
+
         private HashSet<Vector3> visitedPositions;
+
+        private Dictionary<DroneMove, int> moveCounter;
+
+
 
         private void Awake()
         {
             visitedPositions = new HashSet<Vector3>();
+            moveCounter = new Dictionary<DroneMove, int>()
+            {
+                { DroneMove.Forward, 0 },
+                { DroneMove.Backward, 0 },
+                { DroneMove.Leftward, 0 },
+                { DroneMove.Rightward, 0 },
+                { DroneMove.Upward, 0 },
+                { DroneMove.Downward, 0 },
+                { DroneMove.RotateLeftward, 0 },
+                { DroneMove.RotateRightward, 0 },
+                { DroneMove.Spray, 0 },
+                { DroneMove.DoNothing, 0},
+            };
         }
 
         private const int MIN_VISITED_POSITIONS = 100;
@@ -56,15 +77,55 @@ namespace Assets.Scripts
             return penalty;
         }
 
+        private double CalculateEntropyPenalty()
+        {
+            double totalMoves = moveCounter.Values.Sum();
+
+            if (totalMoves == 0)
+            {
+                return 0.0;
+            }
+
+            double entropy = 0.0;
+            int possibleMoveTypes = moveCounter.Count;
+
+            foreach (var moveCount in moveCounter.Values)
+            {
+                if (moveCount > 0)
+                {
+                    double probability = moveCount / totalMoves;
+                    entropy -= probability * Math.Log(probability, 2);
+                }
+            }
+
+            double maxEntropy = Math.Log(possibleMoveTypes, 2);
+            if (maxEntropy <= 0) return 0.0;
+
+            double normalizedEntropy = entropy / maxEntropy;
+
+
+            if (normalizedEntropy >= ACCEPTABLE_NORMALIZED_ENTROPY)
+            {
+                return 0.0;
+            }
+            else
+            {
+                
+                double deficit = (ACCEPTABLE_NORMALIZED_ENTROPY - normalizedEntropy) / ACCEPTABLE_NORMALIZED_ENTROPY;
+                return ENTROPY_PENALTY_FACTOR * deficit;
+            }
+        }
+
         public double Evaluate()
         {
             double collision = collisionDetector.CalculateAllCollisionTime();
-            return Math.Max(0.0, 100 + -Math.Max(collision, collision * collision) - PenaltyForPassivness() + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
+            return Math.Max(0.0, 100 + -Math.Max(collision, collision * collision) - PenaltyForPassivness() - CalculateEntropyPenalty() + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
         }
 
         public void OnMoveMade(DroneMove move, Transform trans)
         {
             visitedPositions.Add(trans.position);
+            moveCounter[move]++;
         }
     }
 }
