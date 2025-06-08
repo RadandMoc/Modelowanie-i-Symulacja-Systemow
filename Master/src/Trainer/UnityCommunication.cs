@@ -49,7 +49,13 @@ namespace Trainer
 		public void ClearWorkers()
 		{
 			for (int i = 0; i < unityThreads; i++)
-				File.Delete($"{WORKER_PATH}{i}/result.json");
+			{
+				try
+				{
+					File.Delete($"{WORKER_PATH}{i}/result.json");
+				}
+				catch (DirectoryNotFoundException) { }
+			}
 		}
 
 		public void InitializeGenomeFactory(NeatGenomeFactory factory)
