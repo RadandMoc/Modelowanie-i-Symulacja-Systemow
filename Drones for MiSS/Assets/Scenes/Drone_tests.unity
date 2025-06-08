@@ -1523,6 +1523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drone: {fileID: 306900641}
+  camera: {fileID: 1012442868}
   funcObject: {fileID: 407442644}
   collisionBehaviour: {fileID: 145072027}
 --- !u!114 &930691707
