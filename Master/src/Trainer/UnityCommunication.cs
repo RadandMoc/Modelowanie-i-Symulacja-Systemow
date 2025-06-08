@@ -133,8 +133,8 @@ namespace Trainer
 					var psi = new ProcessStartInfo
 					{
 						FileName = UNITY_PATH,
-                        //Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -logFile log_{checkingWorker}.txt",
-                        Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode borderless",
+                        Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -logFile log_{checkingWorker}_{DateTime.Now.Month}_{DateTime.Now.Day}_{DateTime.Now.Hour}_{DateTime.Now.Minute}.txt",
+                        //Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode borderless",
                         WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
 						UseShellExecute = false
 					};
