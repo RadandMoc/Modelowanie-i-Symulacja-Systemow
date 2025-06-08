@@ -107,6 +107,7 @@ namespace Trainer
 
             Dictionary<uint, NeatGenome> genomeDict = genomes.ToDictionary(g => g.Id); //key-genome id, value-genome
 			Queue<NeatGenome> genomesToCalculateFitness = new(genomes); //[.. genomes];  genomes.ToList();
+			int seed = new Random().Next(0, 1000000); // Losowy seed dla symulacji, może być przekazany do Unity
 
 			while (genomeDict.Count > 0)
 			{
@@ -133,7 +134,7 @@ namespace Trainer
 					var psi = new ProcessStartInfo
 					{
 						FileName = UNITY_PATH,
-                        Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -logFile log_{checkingWorker}_{DateTime.Now.Month}_{DateTime.Now.Day}_{DateTime.Now.Hour}_{DateTime.Now.Minute}.txt",
+                        Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -seedNo {seed} -logFile log_{checkingWorker}_{DateTime.Now.Month}_{DateTime.Now.Day}_{DateTime.Now.Hour}_{DateTime.Now.Minute}.txt",
                         //Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode borderless",
                         WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
 						UseShellExecute = false

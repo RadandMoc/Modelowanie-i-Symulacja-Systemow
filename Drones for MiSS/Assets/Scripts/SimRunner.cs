@@ -39,9 +39,11 @@ public class SimRunner : MonoBehaviour
 
     int i = 0;
 
-    void Start()
+	public static readonly int SEED = GetArg("-seedNo", 1234567);
+
+	void Start()
 	{
-		//Debug.Log("SimRunner started");
+		Debug.Log($"Seed number: {SEED} - Loaded from args: {SEED != 1234567}");
 		fitnessFunc = funcObject.GetComponent<TraditionalFitnessCalculate>();
 		Run();
 	}
