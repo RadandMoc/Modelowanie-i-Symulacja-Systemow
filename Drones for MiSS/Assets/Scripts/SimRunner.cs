@@ -23,6 +23,8 @@ public class SimRunner : MonoBehaviour
 	private DroneSim drone;
 
 
+	[SerializeField]
+	private GameObject camera;
 	
 	[SerializeField]
 	private GameObject funcObject;
@@ -219,8 +221,19 @@ public class SimRunner : MonoBehaviour
 		//Debug.Log($"[Worker {workerId} | Genom {genomeId}] Wykonywanie logiki symulacji z fenotypem. Wejœcia: {phenome.InputCount}, Wyjœcia: {phenome.OutputCount}");
 		var obj = GameObject.Find("Drone_red");
 
-		IGetInputs droneKinematics = obj.GetComponent<DroneKinematics>();
-		IGetInputs raycastHititng = obj.GetComponent<RaycastHitting>();
+		DroneKinematics droneKin = obj.GetComponent<DroneKinematics>();
+
+		DronePositionGenerator posGenerator = new DronePositionGenerator();
+		(Vector3 vec, Quaternion rot) result = posGenerator.GeneratePositionRotation(new System.Random());
+		droneKin.transform.position = result.vec;
+		droneKin.transform.rotation = result.rot;
+		camera.transform.position = result.vec;
+		camera.transform.rotation = result.rot;
+
+        IGetInputs droneKinematics = droneKin;
+        IGetInputs raycastHititng = obj.GetComponent<RaycastHitting>();
+
+
 
 		drone.Initialize(phenome, new List<IGetInputs>() { droneKinematics, raycastHititng });
 
