@@ -141,7 +141,13 @@ public class SimRunner : MonoBehaviour
 			// To kluczowy krok, aby genome.ActivationFnLibrary by³o dostêpne dla dekodera.
 			genome.GenomeFactory = genomeFactory;
 
-			phenome = FastAcyclicNetworkFactory.CreateFastAcyclicNetwork(genome, false);
+			if (!CyclicNetworkTest.IsNetworkCyclic(genome))
+				phenome = FastAcyclicNetworkFactory.CreateFastAcyclicNetwork(genome, false);
+			else
+			{
+				NetworkActivationScheme activationScheme = NetworkActivationScheme.CreateCyclicFixedTimestepsScheme(40);
+				phenome = CyclicNetworkFactory.CreateCyclicNetwork(genome, activationScheme, false);
+			}
 
 			//Debug.Log($"[Worker {workerId} | Genom {genome.Id}] Genom zdekodowany do fenotypu.");
 
