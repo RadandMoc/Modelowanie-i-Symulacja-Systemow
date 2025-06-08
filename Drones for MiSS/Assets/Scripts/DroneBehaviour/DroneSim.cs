@@ -1,14 +1,15 @@
-using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.InputSystem;
-using System.Collections;
-using Python.Runtime;
-using System.IO;
 using Assets.Scripts;
-using SharpNeat.Phenomes;
-using NUnit.Framework;
-using System.Collections.Generic;
 using Assets.Scripts.DroneBehaviour;
+using NUnit.Framework;
+using Python.Runtime;
+using SharpNeat.Phenomes;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using TMPro;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 public class DroneSim : MonoBehaviour
 {
@@ -21,7 +22,9 @@ public class DroneSim : MonoBehaviour
 	SprayBehaviour spray;
     [SerializeField]
     DroneActions droneActions;
-
+	private ulong _sprayCount = 0;
+	[SerializeField]
+	private TextMeshProUGUI _sprayTextField;
 
 	public void Initialize(IBlackBox blackBox, List<IGetInputs> inputSources)
 	{
@@ -45,11 +48,11 @@ public class DroneSim : MonoBehaviour
 		}
 		else if (move != DroneMove.Spray) 
 		{
-           
-            droneActions.MakeAction(move);
+			droneActions.MakeAction(move);
         }
-		else 
+		else
 		{
+			_sprayTextField.text = $"Spray: {++_sprayCount}";
 			Debug.Log("Spray action triggered");
             spray.Spray();
         }
