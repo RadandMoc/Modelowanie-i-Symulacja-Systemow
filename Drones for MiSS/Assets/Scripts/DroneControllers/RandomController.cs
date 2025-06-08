@@ -14,7 +14,7 @@ namespace Assets.Scripts
             //int actionIndex = random.Next(0, Enum.GetValues(typeof(DroneMove)).Length);
             int actionIndex = random.Next(0, 5);
             DroneMove action = (DroneMove)actionIndex;
-            return DroneMove.Forward;
+            return DroneMove.Spray;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Trainer
 			NeatGenomeFactory genomeFactory = CreateGenomeFactory(6 * 5 + 9, 10);
 			// 6 promieni, każdy z 5 neuronami (dystans, czy myć, czy karany za umycie, czy ruchome, czy uderzalne) + 9 o pozycji drona
 
-			int populationSize = 50; // Liczba genomów do wygenerowania
+			int populationSize = 54; // Liczba genomów do wygenerowania
 
 			Console.WriteLine($"Utworzono {populationSize} genomów do symulacji.");
 

@@ -62,7 +62,10 @@ namespace Trainer
 		{
 			var eaParam = new NeatEvolutionAlgorithmParameters();
 			eaParam.SpecieCount = genomeList.Count;
-			var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
+			eaParam.SelectionProportion = 0.4;
+			eaParam.OffspringSexualProportion = 0.8;
+			eaParam.OffspringAsexualProportion = 0.2;
+            var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
 			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), complexityRegulationStrategy);
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;

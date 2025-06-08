@@ -53,6 +53,6 @@ public class FollowCamera : MonoBehaviour
 
         // 4. (Opcjonalnie) Upewnij się, że kamera zawsze patrzy na cel.
         // Odkomentuj poniższą linię, jeśli chcesz, aby kamera obracała się razem z celem.
-        // transform.LookAt(target);
+        //transform.LookAt(target);
     }
 }

@@ -56,11 +56,11 @@ public class SimRunner : MonoBehaviour
 		i++;
 		if (i < 2_000)
 		{
-			drone.ClickKey();
+			var move = drone.ClickKey();
+			fitnessFunc.OnMoveMade(move, collisionBehaviour.transform);
 		}
 		else
 		{
-			drone.ReleaseKey();
 			Debug.Log(fitnessFunc.Evaluate());
             SaveResult(Path.Combine(currentDir, "result.json"), fitnessFunc.Evaluate());
             Application.Quit();
@@ -222,14 +222,14 @@ public class SimRunner : MonoBehaviour
 		var obj = GameObject.Find("Drone_red");
 
 		DroneKinematics droneKin = obj.GetComponent<DroneKinematics>();
-
+		
 		DronePositionGenerator posGenerator = new DronePositionGenerator();
-		(Vector3 vec, Quaternion rot) result = posGenerator.GeneratePositionRotation(new System.Random());
+		(Vector3 vec, Quaternion rot) result = posGenerator.GeneratePositionRotation(new System.Random(SEED));
 		droneKin.transform.position = result.vec;
 		droneKin.transform.rotation = result.rot;
 		camera.transform.position = result.vec;
 		camera.transform.rotation = result.rot;
-
+		
         IGetInputs droneKinematics = droneKin;
         IGetInputs raycastHititng = obj.GetComponent<RaycastHitting>();
 

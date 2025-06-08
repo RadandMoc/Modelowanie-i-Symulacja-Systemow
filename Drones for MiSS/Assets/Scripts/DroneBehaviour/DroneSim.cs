@@ -35,7 +35,7 @@ public class DroneSim : MonoBehaviour
 
 	public void ReleaseKey() => KeyboardSimulator.ReleaseKey(key);
 
-	public void ClickKey()
+	public DroneMove ClickKey()
 	{
 		//KeyboardSimulator.ReleaseKey(key);
 		DroneMove move = controller.MakeAction();			
@@ -44,7 +44,6 @@ public class DroneSim : MonoBehaviour
 		if (move == DroneMove.DoNothing)
 		{
 			Debug.Log("No action taken");
-            return;
 		}
 		else if (move != DroneMove.Spray) 
 		{
@@ -56,6 +55,7 @@ public class DroneSim : MonoBehaviour
 			Debug.Log("Spray action triggered");
             spray.Spray();
         }
+		return move;
 	}
 
 	private IEnumerator RandomKeyPressCoroutine()
