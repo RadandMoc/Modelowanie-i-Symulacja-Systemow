@@ -40,19 +40,18 @@ public class DroneSim : MonoBehaviour
 
 		if (move == DroneMove.DoNothing)
 		{
-			return;
+			Debug.Log("No action taken");
+            return;
 		}
 		else if (move != DroneMove.Spray) 
 		{
-            /*
-            key = DroneMoveKeyMapping.GetKeyCode(move);
-            KeyboardSimulator.PressKey(key);
-			*/
+           
             droneActions.MakeAction(move);
         }
 		else 
 		{
-			spray.Spray();
+			Debug.Log("Spray action triggered");
+            spray.Spray();
         }
 	}
 

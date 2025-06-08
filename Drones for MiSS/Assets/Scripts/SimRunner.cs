@@ -50,7 +50,7 @@ public class SimRunner : MonoBehaviour
     {
         //Debug.Log("SimRunner update");
 		i++;
-		if (i < 120_000)
+		if (i < 2_000)
 		{
 			drone.ClickKey();
 		}
@@ -187,6 +187,7 @@ public class SimRunner : MonoBehaviour
 
 		// Wywo³anie logiki symulacji z gotowym fenotypem
 		InitializeDroneLogic(phenome, genome.Id, workerId);
+		
 		//Debug.Log($"[Worker {workerId}] Logika symulacji zakoñczona. Fitness dla genomu ID [{genome.Id}]: {fitness}");
 
 		//Debug.Log($"[Worker {workerId}] Zamykanie aplikacji.");
