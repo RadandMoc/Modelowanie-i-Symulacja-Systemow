@@ -16,46 +16,78 @@ namespace Trainer
             int outputNumOfNeurons = factory.OutputNeuronCount;
             int hiddenNumOfNeurons = outputNumOfNeurons;
             uint genomeId = factory.NextGenomeId();
+            Random random = new Random((int)genomeId); // Użyj ID genomu jako ziarna dla powtarzalności
 
-            var neuronGeneList = new NeuronGeneList(inputNumOfNeurons + outputNumOfNeurons);
+            var neuronGeneList = new NeuronGeneList(inputNumOfNeurons + outputNumOfNeurons + hiddenNumOfNeurons);
+            // Dodawanie neuronów pozostaje bez zmian
             for (uint i = 0; i < inputNumOfNeurons; i++)
             {
                 neuronGeneList.Add(new NeuronGene(i, NodeType.Input, 0));
             }
-            for (uint i = (uint)inputNumOfNeurons; i < inputNumOfNeurons + hiddenNumOfNeurons; i++)
+            uint hiddenStartIdx = (uint)inputNumOfNeurons;
+            for (uint i = hiddenStartIdx; i < hiddenStartIdx + hiddenNumOfNeurons; i++)
             {
                 neuronGeneList.Add(new NeuronGene(i, NodeType.Hidden, 0));
             }
-            for (uint i = (uint)(inputNumOfNeurons + hiddenNumOfNeurons);
-                i < inputNumOfNeurons + hiddenNumOfNeurons + outputNumOfNeurons; i++)
+            uint outputStartIdx = hiddenStartIdx + (uint)hiddenNumOfNeurons;
+            for (uint i = outputStartIdx; i < outputStartIdx + outputNumOfNeurons; i++)
             {
                 neuronGeneList.Add(new NeuronGene(i, NodeType.Output, 0));
             }
 
-            var connectionGeneList = new ConnectionGeneList(inputNumOfNeurons * hiddenNumOfNeurons + outputNumOfNeurons);
-            Random random = new Random();
+            var connectionGeneList = new ConnectionGeneList();
+
+            // POPRAWIONA LOGIKA - Połączenia wejście -> warstwa ukryta
             for (uint i = 0; i < inputNumOfNeurons; i++)
             {
-                for (uint j = (uint)inputNumOfNeurons; j < inputNumOfNeurons + hiddenNumOfNeurons; j++)
+                for (uint j = hiddenStartIdx; j < hiddenStartIdx + hiddenNumOfNeurons; j++)
                 {
-                    uint connId = factory.InnovationIdGenerator.NextId;
-                    connectionGeneList.Add(new ConnectionGene(connId, i, j, random.NextDouble()));
+                    connectionGeneList.Add(GetOrCreateConnectionGene(factory, i, j, random.NextDouble()));
                 }
             }
+
+            // POPRAWIONA LOGIKA - Połączenia warstwa ukryta -> wyjście
             if (hiddenNumOfNeurons == outputNumOfNeurons)
             {
-                for (uint i = (uint)inputNumOfNeurons; i < inputNumOfNeurons + hiddenNumOfNeurons; i++)
+                for (uint i = 0; i < hiddenNumOfNeurons; i++)
                 {
-                    uint connId = factory.InnovationIdGenerator.NextId;
-                    connectionGeneList.Add(new ConnectionGene(connId, i, i + (uint)hiddenNumOfNeurons, 1));
+                    connectionGeneList.Add(GetOrCreateConnectionGene(factory, hiddenStartIdx + i, outputStartIdx + i, 1.0));
                 }
             }
             else
+            {
                 throw new NotImplementedException("Gamoniom nie chciało się robić dla różnej liczby neuronów ukrytych i wyjściowych");
+            }
 
-            var genome = new NeatGenome(factory, genomeId, 0, neuronGeneList, connectionGeneList, factory.InputNeuronCount, factory.OutputNeuronCount, true);
-            // Fabryka powinna zainicjalizować EvaluationInfo. Nie musimy nic więcej robić.
-            return genome;
+            return new NeatGenome(factory, genomeId, 0, neuronGeneList, connectionGeneList, factory.InputNeuronCount, factory.OutputNeuronCount, true);
+        }
+
+        /// <summary>
+        /// Metoda pomocnicza, która sprawdza historię innowacji i tworzy lub pobiera istniejący gen.
+        /// </summary>
+        private static ConnectionGene GetOrCreateConnectionGene(NeatGenomeFactory factory, uint sourceId, uint targetId, double weight)
+        {
+            var connectionKey = new ConnectionEndpointsStruct(sourceId, targetId);
+            uint innovationId; // Zmienna na ostateczny, poprawny numer innowacji
+            uint? existingId;  // Zmienna nullable, której wymaga metoda TryGetValue
+
+            // Spróbuj pobrać istniejący numer innowacji dla danego połączenia
+            if (factory.AddedConnectionBuffer.TryGetValue(connectionKey, out existingId))
+            {
+                // SUKCES: Klucz został znaleziony.
+                // Używamy istniejącego numeru innowacji. Musimy użyć .Value, aby uzyskać wartość z typu nullable.
+                innovationId = existingId.Value;
+            }
+            else
+            {
+                // PORAŻKA: Klucz nie istnieje w historii.
+                // Generujemy nowy numer innowacji i dodajemy go do bufora historii.
+                innovationId = factory.NextInnovationId();
+                factory.AddedConnectionBuffer.Enqueue(connectionKey, innovationId);
+            }
+
+            // Stwórz gen połączenia z poprawnym (nowym lub ponownie użytym) numerem innowacji
+            return new ConnectionGene(innovationId, sourceId, targetId, weight);
         }
 
     }

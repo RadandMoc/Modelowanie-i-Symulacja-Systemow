@@ -177,6 +177,9 @@ namespace SharpNeat.Genomes.Neat
             set { _disjointExcessGenesRecombineProbability = value; }
         }
 
+
+        public double WeakerParentDisjointExcessGeneProbability { get; set; } = 0.0;
+
         /// <summary>
         /// Gets or sets the probability that a genome mutation operates on genome connection weights.
         /// </summary>

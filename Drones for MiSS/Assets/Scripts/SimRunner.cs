@@ -43,7 +43,9 @@ public class SimRunner : MonoBehaviour
 
 	public static readonly int SEED = GetArg("-seedNo", 1234567);
 
-	void Start()
+	public static readonly int TURN = GetArg("-turnsNo", 2000);
+
+    void Start()
 	{
 		Debug.Log($"Seed number: {SEED} - Loaded from args: {SEED != 1234567}");
 		fitnessFunc = funcObject.GetComponent<TraditionalFitnessCalculate>();
@@ -54,7 +56,7 @@ public class SimRunner : MonoBehaviour
     {
         //Debug.Log("SimRunner update");
 		i++;
-		if (i < 20_000)
+		if (i < TURN)
 		{
 			var move = drone.ClickKey();
 			fitnessFunc.OnMoveMade(move, collisionBehaviour.transform);

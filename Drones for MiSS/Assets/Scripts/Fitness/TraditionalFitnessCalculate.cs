@@ -18,15 +18,15 @@ namespace Assets.Scripts
         [SerializeField]
         private List<NotSpraybleObject> notSprayableObjects;
 
-        private const double ACCEPTABLE_NORMALIZED_ENTROPY = 0.83;
+        private const double ACCEPTABLE_NORMALIZED_ENTROPY = 1.0;
 
         private const double ENTROPY_PENALTY_FACTOR = 80.0;
 
         private const double REWARD_FOR_CLOSE_DISTANCE_SPRAYABLE = 100.0;
 
-        private const double CLOSE_DISTANCE_SPRAYABLE = 7.0f;
+        private const double CLOSE_DISTANCE_SPRAYABLE = 30.0f;
 
-        private int closeToSpraybleCounter = 0;
+        private double closeToSpraybleCounter = 0;
 
         private int turnCounter = 0;
 
@@ -129,9 +129,14 @@ namespace Assets.Scripts
             double reward = 0.0;
             foreach (var sprayableObject in sprayableObjects)
             {
-                if (Vector3.Distance( dronePos.position , sprayableObject.transform.position) < CLOSE_DISTANCE_SPRAYABLE)
+                float distance = Vector3.Distance(dronePos.position, sprayableObject.transform.position);
+                if (distance < CLOSE_DISTANCE_SPRAYABLE)
                 {
-                    closeToSpraybleCounter++;
+                    const float minDistanceClamp = 5f;
+                    float clampedDistance = Math.Max(minDistanceClamp, distance);
+
+                    closeToSpraybleCounter += 1.0 / Math.Sqrt(clampedDistance);
+
                     return;
                 }
             }
@@ -145,7 +150,7 @@ namespace Assets.Scripts
         public double Evaluate()
         {
             double collision = collisionDetector.CalculateAllCollisionTime();
-            return Math.Max(0.0, 100 + -Math.Max(collision, collision * Math.Sqrt(collision) / 8) - PenaltyForPassivness() - CalculateEntropyPenalty() + RewardForCloseToSprayable() + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
+            return Math.Max(0.0, 100 + -Math.Max(collision, collision * Math.Sqrt(collision) / 6) - PenaltyForPassivness() - CalculateEntropyPenalty() + RewardForCloseToSprayable() + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
         }
 
         public void OnMoveMade(DroneMove move, Transform trans)

@@ -14,7 +14,7 @@ namespace Trainer
 		private UnityCommunication _unityCommunicator;
 		private Double? _satisfyingFitness = null;
 		//private static int HARDWARE_THREADS = Math.Min(Math.Max(1, Environment.ProcessorCount - 1), 7);
-		private static int HARDWARE_THREADS = 6;
+		private static int HARDWARE_THREADS = 9;
 
 
         public UnityGenomeEvaluator(NeatGenomeFactory genomeFactory)

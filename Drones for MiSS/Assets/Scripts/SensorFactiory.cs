@@ -42,6 +42,36 @@ public static class SensorFactory
         return sensors;
     }
 
+
+    public static List<Sensor> CreateDroneSensors9(float forwardSpreadAngle, float forwardVerticalAngle)
+    {
+        var sensors = new List<Sensor>();
+
+        // === 1. Sensory kardynalne (z rzutu od góry) ===
+        sensors.Add(new Sensor(Vector3.forward));   // 1. Przód
+        sensors.Add(new Sensor(Vector3.back));      // 2. Tył
+        sensors.Add(new Sensor(Vector3.left));      // 3. Lewo
+        sensors.Add(new Sensor(Vector3.right));     // 4. Prawo
+        sensors.Add(new Sensor(Vector3.down));      // 5. Dół (widoczny na rzucie bocznym)
+
+        // === 2. Wachlarz przednich sensorów (z rzutu bocznego) ===
+        // Te sensory są obrócone względem osi Y (horyzontalnie) i osi X (wertykalnie)
+
+        // 6. Przód-gora-lewo
+        sensors.Add(new Sensor(Quaternion.Euler(-forwardVerticalAngle, -forwardSpreadAngle, 0) * Vector3.forward));
+
+        // 7. Przód-dół-rawo
+        sensors.Add(new Sensor(Quaternion.Euler(forwardVerticalAngle, forwardSpreadAngle, 0) * Vector3.forward));
+
+        // 8. Przód-góra-prawo (połączenie rzutu od góry i z boku)
+        sensors.Add(new Sensor(Quaternion.Euler(-forwardVerticalAngle, forwardSpreadAngle, 0) * Vector3.forward));
+
+        // 9. Przód-góra-lewo (połączenie rzutu od góry i z boku)
+        sensors.Add(new Sensor(Quaternion.Euler(forwardVerticalAngle, -forwardSpreadAngle, 0) * Vector3.forward));
+
+        return sensors;
+    }
+
     /// <summary>
     /// (Example for the future) Creates a cone-shaped sensor array.
     /// </summary>

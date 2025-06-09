@@ -35,7 +35,8 @@ public class RaycastHitting : MonoBehaviour, IGetInputs
     private void InitializeSensors()
     {
         // Wywo³ujemy fabrykê, aby stworzy³a dla nas listê sensorów w konfiguracji 3x2.
-        sensors = SensorFactory.CreateGrid6(horizontalSpreadAngle, verticalLevelAngle);
+        //sensors = SensorFactory.CreateGrid6(horizontalSpreadAngle, verticalLevelAngle);
+        sensors = SensorFactory.CreateDroneSensors9(horizontalSpreadAngle, verticalLevelAngle);
     }
 
     /// <summary>
