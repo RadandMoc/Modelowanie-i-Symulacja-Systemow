@@ -33,6 +33,7 @@ namespace Trainer
 		private const double OFFSPRING_SEXUAL_PROPORTION = 0.9;
         private const double ELITISM = 0.15;
         private const double OFFSPRING_ASEXUAL_PROPORTION = 0.1;
+		private static IComplexityRegulationStrategy COMPLEXITY_REGULATION_STRATEGY = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 70);
 
 		// private readonly Stopwatch _stopwatch;
 		// private readonly INeatExperiment _experiment;
@@ -52,8 +53,7 @@ namespace Trainer
 			eaParam.OffspringAsexualProportion = OFFSPRING_ASEXUAL_PROPORTION;
             eaParam.ElitismProportion = ELITISM;
 
-            var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
-			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), complexityRegulationStrategy);
+			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), COMPLEXITY_REGULATION_STRATEGY);
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;
@@ -75,8 +75,7 @@ namespace Trainer
 			eaParam.OffspringSexualProportion = OFFSPRING_SEXUAL_PROPORTION;
 			eaParam.OffspringAsexualProportion = OFFSPRING_ASEXUAL_PROPORTION;
 			eaParam.ElitismProportion = ELITISM;
-            var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
-			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), complexityRegulationStrategy);
+			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), COMPLEXITY_REGULATION_STRATEGY);
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;
@@ -102,8 +101,7 @@ namespace Trainer
 			eaParam.OffspringAsexualProportion = OFFSPRING_ASEXUAL_PROPORTION;
             eaParam.ElitismProportion = ELITISM;
 
-            var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
-			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), complexityRegulationStrategy);
+			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), COMPLEXITY_REGULATION_STRATEGY);
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;
