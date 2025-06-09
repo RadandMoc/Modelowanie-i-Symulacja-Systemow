@@ -22,6 +22,14 @@ namespace Assets.Scripts
 
         private const double ENTROPY_PENALTY_FACTOR = 80.0;
 
+        private const double REWARD_FOR_CLOSE_DISTANCE_SPRAYABLE = 100.0;
+
+        private const double CLOSE_DISTANCE_SPRAYABLE = 7.0f;
+
+        private int closeToSpraybleCounter = 0;
+
+        private int turnCounter = 0;
+
         private HashSet<Vector3> visitedPositions;
 
         private Dictionary<DroneMove, int> moveCounter;
@@ -116,16 +124,38 @@ namespace Assets.Scripts
             }
         }
 
+        private void UpdateSprayableCounter(Transform dronePos)
+        {
+            double reward = 0.0;
+            foreach (var sprayableObject in sprayableObjects)
+            {
+                if (Vector3.Distance( dronePos.position , sprayableObject.transform.position) < CLOSE_DISTANCE_SPRAYABLE)
+                {
+                    closeToSpraybleCounter++;
+                    return;
+                }
+            }
+        }
+
+        private double RewardForCloseToSprayable() 
+        {
+            return closeToSpraybleCounter / turnCounter * REWARD_FOR_CLOSE_DISTANCE_SPRAYABLE;
+        }
+
         public double Evaluate()
         {
             double collision = collisionDetector.CalculateAllCollisionTime();
-            return Math.Max(0.0, 100 + -Math.Max(collision, collision * collision) - PenaltyForPassivness() - CalculateEntropyPenalty() + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
+            return Math.Max(0.0, 100 + -Math.Max(collision, collision * Math.Sqrt(collision) / 8) - PenaltyForPassivness() - CalculateEntropyPenalty() + RewardForCloseToSprayable() + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
         }
 
         public void OnMoveMade(DroneMove move, Transform trans)
         {
             visitedPositions.Add(trans.position);
             moveCounter[move]++;
+            UpdateSprayableCounter(trans);
+            turnCounter++;
+
+
         }
     }
 }

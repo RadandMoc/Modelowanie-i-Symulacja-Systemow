@@ -34,6 +34,9 @@ namespace Trainer
         private const double ELITISM = 0.15;
         private const double OFFSPRING_ASEXUAL_PROPORTION = 0.1;
 		private static IComplexityRegulationStrategy COMPLEXITY_REGULATION_STRATEGY = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 70);
+		private const double OFFSPRING_SEXUAL_PROPORTION = 1;
+        private const double ELITISM = 0.1;
+        private const double OFFSPRING_ASEXUAL_PROPORTION = 0;
 
 		// private readonly Stopwatch _stopwatch;
 		// private readonly INeatExperiment _experiment;
@@ -47,22 +50,25 @@ namespace Trainer
 			// _experiment = experiment;
 			// _stopwatch = new Stopwatch();
 			var eaParam = new NeatEvolutionAlgorithmParameters();
-			eaParam.SpecieCount = populationSize;
+			eaParam.SpecieCount = (int)(populationSize*0.25);
 			eaParam.SelectionProportion = SELECTION_PROPORTION;
 			eaParam.OffspringSexualProportion = OFFSPRING_SEXUAL_PROPORTION;
 			eaParam.OffspringAsexualProportion = OFFSPRING_ASEXUAL_PROPORTION;
             eaParam.ElitismProportion = ELITISM;
+            eaParam.InterspeciesMatingProportion = 0.1;
 
-			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), COMPLEXITY_REGULATION_STRATEGY);
+			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric(1.0, 0.0, 15.0)), COMPLEXITY_REGULATION_STRATEGY);
+            var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;
             _neatGenomeFactory = new NeatGenomeFactory(6 * 5 + 9, 10, _activationFnLibrary);
 			_genomeFactory = _neatGenomeFactory;
-
-			var genomeEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
+            _genomeList = _genomeFactory.CreateGenomeList(populationSize, 0);
+            InitializeNeatParameters(_neatGenomeFactory.NeatGenomeParameters);
+            var genomeEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
 			_genomeListEvaluator = genomeEvaluator;
-			_genomeList = GenerateStartGenomes(populationSize);
+			//_genomeList = GenerateStartGenomes(populationSize);
 			_savePopulationInterval = savePopulationInterval;
 			genomeEvaluator.ClearWorkers();
 		}
@@ -70,19 +76,22 @@ namespace Trainer
 		public NeatManager(List<NeatGenome> genomeList, uint savePopulationInterval = 3)
 		{
 			var eaParam = new NeatEvolutionAlgorithmParameters();
-			eaParam.SpecieCount = genomeList.Count;
-			eaParam.SelectionProportion = SELECTION_PROPORTION;
+			eaParam.SpecieCount =  (int)(genomeList.Count * 0.25);
+            eaParam.SelectionProportion = SELECTION_PROPORTION;
 			eaParam.OffspringSexualProportion = OFFSPRING_SEXUAL_PROPORTION;
 			eaParam.OffspringAsexualProportion = OFFSPRING_ASEXUAL_PROPORTION;
 			eaParam.ElitismProportion = ELITISM;
 			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), COMPLEXITY_REGULATION_STRATEGY);
+            eaParam.InterspeciesMatingProportion = 0.1;
+            var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;
 			_neatGenomeFactory = new NeatGenomeFactory(6 * 5 + 9, 10, _activationFnLibrary);
 			_genomeFactory = _neatGenomeFactory;
+            InitializeNeatParameters(_neatGenomeFactory.NeatGenomeParameters);
 
-			var genomeEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
+            var genomeEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
 			_genomeListEvaluator = genomeEvaluator;
 			_genomeList = genomeList; //GenerateStartGenomes(genomeList.Count);
 			_savePopulationInterval = savePopulationInterval;
@@ -95,13 +104,16 @@ namespace Trainer
 			_genomeFactory = _neatGenomeFactory;
 			var genomes = LoadGenomes(path);
 			var eaParam = new NeatEvolutionAlgorithmParameters();
-			eaParam.SpecieCount = genomes.Count; // Domyślna liczba genomów, może być zmieniona w LoadFromFile
-			eaParam.SelectionProportion = SELECTION_PROPORTION;
+            eaParam.SpecieCount = (int)(genomes.Count * 0.25);
+            eaParam.SelectionProportion = SELECTION_PROPORTION;
 			eaParam.OffspringSexualProportion = OFFSPRING_SEXUAL_PROPORTION;
 			eaParam.OffspringAsexualProportion = OFFSPRING_ASEXUAL_PROPORTION;
             eaParam.ElitismProportion = ELITISM;
 
-			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), COMPLEXITY_REGULATION_STRATEGY);
+			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric(1.0, 0.0, 15.0)), COMPLEXITY_REGULATION_STRATEGY);
+            eaParam.InterspeciesMatingProportion = 0.1;
+            InitializeNeatParameters(_neatGenomeFactory.NeatGenomeParameters);
+            var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;
@@ -113,7 +125,15 @@ namespace Trainer
 		}
 		#endregion constructors
 
-		private List<NeatGenome> LoadGenomes(string path)
+		private void InitializeNeatParameters(NeatGenomeParameters neatGenomeParameters)
+		{
+            _neatGenomeFactory.NeatGenomeParameters.ConnectionWeightMutationProbability = 0.75;
+            _neatGenomeFactory.NeatGenomeParameters.AddNodeMutationProbability = 0.05;
+            _neatGenomeFactory.NeatGenomeParameters.AddConnectionMutationProbability = 0.15;
+			_neatGenomeFactory.NeatGenomeParameters.DisjointExcessGenesRecombinedProbability = 0.7;
+        }
+
+        private List<NeatGenome> LoadGenomes(string path)
 		{
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(path);

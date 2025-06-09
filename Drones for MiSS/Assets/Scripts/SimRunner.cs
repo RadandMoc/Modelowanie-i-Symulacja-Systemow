@@ -54,7 +54,7 @@ public class SimRunner : MonoBehaviour
     {
         //Debug.Log("SimRunner update");
 		i++;
-		if (i < 2_000)
+		if (i < 20_000)
 		{
 			var move = drone.ClickKey();
 			fitnessFunc.OnMoveMade(move, collisionBehaviour.transform);
