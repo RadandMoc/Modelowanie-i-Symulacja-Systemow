@@ -51,7 +51,7 @@ namespace Trainer
 			// _experiment = experiment;
 			// _stopwatch = new Stopwatch();
 			var eaParam = new NeatEvolutionAlgorithmParameters();
-			eaParam.SpecieCount = (int)(populationSize*0.2);
+			eaParam.SpecieCount = (int)(populationSize*0.25);
 			eaParam.SelectionProportion = SELECTION_PROPORTION;
 			eaParam.OffspringSexualProportion = OFFSPRING_SEXUAL_PROPORTION;
 			eaParam.OffspringAsexualProportion = OFFSPRING_ASEXUAL_PROPORTION;
@@ -77,7 +77,7 @@ namespace Trainer
 		public NeatManager(List<NeatGenome> genomeList, uint savePopulationInterval = 3)
 		{
 			var eaParam = new NeatEvolutionAlgorithmParameters();
-			eaParam.SpecieCount =  (int)(genomeList.Count * 0.2);
+			eaParam.SpecieCount =  (int)(genomeList.Count * 0.25);
             eaParam.SelectionProportion = SELECTION_PROPORTION;
 			eaParam.OffspringSexualProportion = OFFSPRING_SEXUAL_PROPORTION;
 			eaParam.OffspringAsexualProportion = OFFSPRING_ASEXUAL_PROPORTION;
@@ -105,7 +105,7 @@ namespace Trainer
 			_genomeFactory = _neatGenomeFactory;
 			var genomes = LoadGenomes(path);
 			var eaParam = new NeatEvolutionAlgorithmParameters();
-            eaParam.SpecieCount = (int)(genomes.Count * 0.2);
+            eaParam.SpecieCount = (int)(genomes.Count * 0.25);
             eaParam.SelectionProportion = SELECTION_PROPORTION;
 			eaParam.OffspringSexualProportion = OFFSPRING_SEXUAL_PROPORTION;
 			eaParam.OffspringAsexualProportion = OFFSPRING_ASEXUAL_PROPORTION;
@@ -133,7 +133,7 @@ namespace Trainer
             _neatGenomeFactory.NeatGenomeParameters.DeleteConnectionMutationProbability = 0.05;
 
             _neatGenomeFactory.NeatGenomeParameters.AddConnectionMutationProbability = 0.25;
-			_neatGenomeFactory.NeatGenomeParameters.DisjointExcessGenesRecombinedProbability = 0.7;
+			_neatGenomeFactory.NeatGenomeParameters.DisjointExcessGenesRecombinedProbability = 0.8;
         }
 
         private List<NeatGenome> LoadGenomes(string path)

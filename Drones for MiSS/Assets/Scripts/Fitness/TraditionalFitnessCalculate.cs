@@ -127,18 +127,20 @@ namespace Assets.Scripts
         private void UpdateSprayableCounter(Transform dronePos)
         {
             double reward = 0.0;
+            float closest = float.MaxValue;
+
             foreach (var sprayableObject in sprayableObjects)
             {
                 float distance = Vector3.Distance(dronePos.position, sprayableObject.transform.position);
-                if (distance < CLOSE_DISTANCE_SPRAYABLE)
-                {
-                    const float minDistanceClamp = 5f;
-                    float clampedDistance = Math.Max(minDistanceClamp, distance);
+                closest = Math.Min(closest, distance);
+            }
 
-                    closeToSpraybleCounter += 1.0 / Math.Sqrt(clampedDistance);
+            if (closest < CLOSE_DISTANCE_SPRAYABLE)
+            {
+                const float minDistanceClamp = 5f;
+                float clampedDistance = Math.Max(minDistanceClamp, closest);
 
-                    return;
-                }
+                closeToSpraybleCounter += 1.0 / Math.Sqrt(clampedDistance);
             }
         }
 
