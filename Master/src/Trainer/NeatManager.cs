@@ -34,10 +34,7 @@ namespace Trainer
         private const double ELITISM = 0.15;
         private const double OFFSPRING_ASEXUAL_PROPORTION = 0.1;
 		private static IComplexityRegulationStrategy COMPLEXITY_REGULATION_STRATEGY = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 70);
-		private const double OFFSPRING_SEXUAL_PROPORTION = 1;
-        private const double ELITISM = 0.1;
-        private const double OFFSPRING_ASEXUAL_PROPORTION = 0;
-
+		private static bool WANT_STARTING_FULLY_CONNECTED = false;
 		// private readonly Stopwatch _stopwatch;
 		// private readonly INeatExperiment _experiment;
 		#endregion fields
@@ -64,8 +61,8 @@ namespace Trainer
 			_ea.UpdateEvent += SaveToFile;
             _neatGenomeFactory = new NeatGenomeFactory(6 * 5 + 9, 10, _activationFnLibrary);
 			_genomeFactory = _neatGenomeFactory;
-            _genomeList = _genomeFactory.CreateGenomeList(populationSize, 0);
-            InitializeNeatParameters(_neatGenomeFactory.NeatGenomeParameters);
+            _genomeList = GenerateStartGenomes(populationSize, WANT_STARTING_FULLY_CONNECTED);
+			InitializeNeatParameters(_neatGenomeFactory.NeatGenomeParameters);
             var genomeEvaluator = new UnityGenomeEvaluator(_neatGenomeFactory);
 			_genomeListEvaluator = genomeEvaluator;
 			//_genomeList = GenerateStartGenomes(populationSize);
@@ -140,13 +137,17 @@ namespace Trainer
 			return NeatGenomeXmlIO.LoadCompleteGenomeList(xmlDoc, true, _neatGenomeFactory);
 		}
 
-		private List<NeatGenome> GenerateStartGenomes(int population)
+		private List<NeatGenome> GenerateStartGenomes(int population, bool fullyConnected = true)
 		{
-            List<NeatGenome> neatGenome = new List<NeatGenome>(population);
-			for (int i = 0; i < population; i++)
-                neatGenome.Add(NeatGenomeInitializer.GenerateNeat(_neatGenomeFactory));
-			return neatGenome;
-        }
+			if (fullyConnected)
+			{
+				List<NeatGenome> neatGenome = new List<NeatGenome>(population);
+				for (int i = 0; i < population; i++)
+					neatGenome.Add(NeatGenomeInitializer.GenerateNeat(_neatGenomeFactory));
+				return neatGenome;
+			}
+			return [.. _neatGenomeFactory.CreateGenomeList(population, 0)]; // Używamy fabryki do wygenerowania genomów
+		}
 
 		public void Start()
 		{
