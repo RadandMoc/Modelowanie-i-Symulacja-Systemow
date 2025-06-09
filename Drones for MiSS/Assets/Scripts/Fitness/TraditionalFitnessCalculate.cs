@@ -20,7 +20,7 @@ namespace Assets.Scripts
 
         private const double ACCEPTABLE_NORMALIZED_ENTROPY = 0.83;
 
-        private const double ENTROPY_PENALTY_FACTOR = 30.0;
+        private const double ENTROPY_PENALTY_FACTOR = 80.0;
 
         private HashSet<Vector3> visitedPositions;
 
