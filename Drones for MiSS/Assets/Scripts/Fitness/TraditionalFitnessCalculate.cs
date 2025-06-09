@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -18,13 +19,13 @@ namespace Assets.Scripts
         [SerializeField]
         private List<NotSpraybleObject> notSprayableObjects;
 
-        private const double ACCEPTABLE_NORMALIZED_ENTROPY = 1.0;
+        private const double ACCEPTABLE_NORMALIZED_ENTROPY = 0.8;
 
         private const double ENTROPY_PENALTY_FACTOR = 80.0;
 
         private const double REWARD_FOR_CLOSE_DISTANCE_SPRAYABLE = 100.0;
 
-        private const double CLOSE_DISTANCE_SPRAYABLE = 30.0f;
+        private const double CLOSE_DISTANCE_SPRAYABLE = 50.0f;
 
         private double closeToSpraybleCounter = 0;
 
@@ -131,8 +132,12 @@ namespace Assets.Scripts
 
             foreach (var sprayableObject in sprayableObjects)
             {
-                float distance = Vector3.Distance(dronePos.position, sprayableObject.transform.position);
-                closest = Math.Min(closest, distance);
+                if (!sprayableObject.IsCleaned())
+                {
+                    float distance = Vector3.Distance(dronePos.position, sprayableObject.transform.position);
+                    closest = Math.Min(closest, distance);
+                }
+                
             }
 
             if (closest < CLOSE_DISTANCE_SPRAYABLE)
