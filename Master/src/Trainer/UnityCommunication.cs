@@ -152,8 +152,42 @@ namespace Trainer
 					Process.Start(psi);
 				}
 
-				checkingWorker = (checkingWorker + 1) % unityThreads;
-				Thread.Sleep(25);
+                        // 3. Przypisz wynik fitness wszystkim genomom o tym samym ID.
+                        foreach (var genome in genomesById[finishedGenomeId])
+                        {
+                            genome.EvaluationInfo.SetFitness(result);
+                        }
+
+                        Console.WriteLine($"Worker {checkingWorker} finished processing genome {finishedGenomeId} with fitness {result}");
+                        activeThreads.Remove(checkingWorker);
+                    }
+                }
+
+                if ((!activeThreads.ContainsKey(checkingWorker)) && genomesToCalculateFitness.Count > 0)
+                {
+                    NeatGenome nextGenome = genomesToCalculateFitness.Dequeue();
+
+					Console.WriteLine($"Worker {checkingWorker} processing genome {nextGenome.Id}");
+                    activeThreads.Add(checkingWorker, nextGenome.Id);
+
+                    // POPRAWKA: Przekazujemy bezpośrednio obiekt 'nextGenome'.
+                    SaveGenome(nextGenome, checkingWorker);
+
+                    var psi = new ProcessStartInfo
+                    {
+                        FileName = UNITY_PATH,
+                        Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode windowed",
+                        WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
+                        UseShellExecute = false,
+                        //WindowStyle = ProcessWindowStyle.Minimized
+
+                    };
+
+                    Process.Start(psi);
+                }
+
+                checkingWorker = (checkingWorker + 1) % unityThreads;
+				Thread.Sleep(25); 
 			}
 		}
 	}

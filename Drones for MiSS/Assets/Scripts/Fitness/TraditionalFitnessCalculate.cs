@@ -23,7 +23,7 @@ namespace Assets.Scripts
 
         private const double ENTROPY_PENALTY_FACTOR = 80.0;
 
-        private const double REWARD_FOR_CLOSE_DISTANCE_SPRAYABLE = 100.0;
+        private const double REWARD_FOR_CLOSE_DISTANCE_SPRAYABLE = 150.0;
 
         private const double CLOSE_DISTANCE_SPRAYABLE = 50.0f;
 
@@ -35,6 +35,7 @@ namespace Assets.Scripts
 
         private Dictionary<DroneMove, int> moveCounter;
 
+        private Vector3 lastPosition = Vector3.zero;
 
 
         private void Awake()
@@ -154,10 +155,21 @@ namespace Assets.Scripts
             return closeToSpraybleCounter / turnCounter * REWARD_FOR_CLOSE_DISTANCE_SPRAYABLE;
         }
 
+
+        public double PenaltyForGettingOutOfBounds() 
+        {
+            if (lastPosition.x < 0 || lastPosition.x > 250 || lastPosition.z < 0 || lastPosition.z > 150)
+            {
+                return 15;
+            }
+            return 0.0;
+        }
+
+
         public double Evaluate()
         {
             double collision = collisionDetector.CalculateAllCollisionTime();
-            return Math.Max(0.0, 100 + -Math.Max(collision, collision * Math.Sqrt(collision) / 6) - PenaltyForPassivness() - CalculateEntropyPenalty() + RewardForCloseToSprayable() + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
+            return Math.Max(0.0, 100 -Math.Max(collision, collision * Math.Sqrt(collision)) - PenaltyForPassivness() - CalculateEntropyPenalty() - PenaltyForGettingOutOfBounds() + RewardForCloseToSprayable() + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
         }
 
         public void OnMoveMade(DroneMove move, Transform trans)
@@ -166,7 +178,7 @@ namespace Assets.Scripts
             moveCounter[move]++;
             UpdateSprayableCounter(trans);
             turnCounter++;
-
+            lastPosition = trans.position;
 
         }
     }
