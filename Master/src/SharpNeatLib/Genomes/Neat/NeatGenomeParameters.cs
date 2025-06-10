@@ -336,7 +336,7 @@ namespace SharpNeat.Genomes.Neat
 			// Gaussian jiggle with sigma=0.01 (most values between +-0.02)
 			// Jiggle 1,2 and 3 connections respectively.
 			list.Add(new ConnectionMutationInfo(0.3985, ConnectionPerturbanceType.JiggleGaussian,
-												ConnectionSelectionType.FixedQuantity, 0.0, 1, 0.0, 0.5));
+												ConnectionSelectionType.FixedQuantity, 0.0, 1, 0.0, 0.05));
 
 			list.Add(new ConnectionMutationInfo(0.2985, ConnectionPerturbanceType.JiggleGaussian,
 												ConnectionSelectionType.FixedQuantity, 0.0, 2, 0.0, 0.04));
