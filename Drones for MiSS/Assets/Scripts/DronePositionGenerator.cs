@@ -11,14 +11,14 @@ namespace Assets.Scripts
     public class DronePositionGenerator
     {
         private List<List<Coords>> positions = new List<List<Coords>> {
-            new List<Coords> { new Coords(76,5,1), new Coords(196, 25, 42), },
-            new List<Coords> { new Coords(76,5,97), new Coords(196, 25, 140) },
-            new List<Coords> { new Coords(208,5,42), new Coords(245, 25, 140) },
-            new List<Coords> { new Coords(1,5,42), new Coords(120, 25, 140) }
+            new List<Coords> { new Coords(134,3,19), new Coords(187, 10, 44), }, //z elewacjami szeroki
+            new List<Coords> { new Coords(136,3,95), new Coords(187, 10, 120) }, // z oknami
+            new List<Coords> { new Coords(206,3,55), new Coords(235, 10, 80) },
+            new List<Coords> { new Coords(93,3,54), new Coords(115, 10, 80) }
         };
         private List<Coords> rotation = new List<Coords> { new Coords(0,0,0), new Coords(0,180,0), new Coords(0,-90,0), new Coords(0,90,0)};
 
-        private double[] weights = new double[] { 0.4, 0.4, 0.05, 0.05 };
+        private double[] weights = new double[] { 0.4, 0.4, 0.1, 0.1 };
 
         int WeightedRandomIndex(Random rng)
         {

@@ -59,11 +59,11 @@ namespace Trainer
 		}
 
 		public void InitializeGenomeFactory(NeatGenomeFactory factory)
-        {
-            genomeFactory = factory;
-        }
+		{
+			genomeFactory = factory;
+		}
 
-        private string? GetFitness(int workerId)
+		private string? GetFitness(int workerId)
 		{
 			string resultPath = $"{WORKER_PATH}{workerId}/result.json";
 			if (!File.Exists(resultPath))
@@ -82,77 +82,78 @@ namespace Trainer
 			}
 		}
 
-	
+		public void RunSimulations(ICollection<NeatGenome> genomes)
+		{
+			LastBestFitness = 0;
+			int checkingWorker = 0;
 
-            public void RunSimulations(ICollection<NeatGenome> genomes)
-        {
-            LastBestFitness = 0;
-            int checkingWorker = 0;
-            Dictionary<int, uint> activeThreads = new Dictionary<int, uint>();
 
-            // 1. Stwórz słownik, który mapuje unikalne ID genomu na listę wszystkich jego wystąpień.
-            var genomesById = genomes
-                .GroupBy(g => g.Id)
-                .ToDictionary(group => group.Key, group => group.ToList());
+			Dictionary<int, uint> activeThreads = new Dictionary<int, uint>(); // Key-no. worker, value-genome id
+			HashSet<uint> numberOfGenomeWithId = new HashSet<uint>(); // Key-no. worker, value-number of genomes assigned to worker
+			List<NeatGenome> genomesToProcess = new List<NeatGenome>();
+			/*
+			foreach (var genome in genomes)
+			{
+				if (!numberOfGenomeWithId.Contains(genome.Id)) { 
+				genomesToProcess.Add(genome);
+				numberOfGenomeWithId.Add(genome.Id); }
 
-            // 2. Do kolejki dodaj tylko unikalne genomy (po jednym dla każdego ID).
-			
+                else 
+				{
+					genomesToProcess.Add(genomeFactory.CreateGenomeCopy(genome, genomeFactory.NextGenomeId(), genome.BirthGeneration));
+				}
+            }
+			*/
+			HashSet<uint> gg = new HashSet<uint>();
+			foreach (NeatGenome gen in genomes)
+			{
+				if (gg.Contains(gen.Id))
+					Console.WriteLine("POWTARZA SIE ID !!!!!!!!!!!!!!!!");
+				else
+					gg.Add(gen.Id);
+			}
 
-            Queue<NeatGenome> genomesToCalculateFitness = new Queue<NeatGenome>(
-                genomesById.Values.Select(genomeList => genomeList[0])
-            );
+			Dictionary<uint, NeatGenome> genomeDict = genomes.ToDictionary(g => g.Id); //key-genome id, value-genome
+			Queue<NeatGenome> genomesToCalculateFitness = new(genomes); //[.. genomes];  genomes.ToList();
+			int seed = new Random().Next(0, 1000000); // Losowy seed dla symulacji, może być przekazany do Unity
+			int turn = new Random().Next(2800, 4800);
 
-            int seed = new Random().Next(0, 1000000);
-			int turn = new Random().Next(2000, 4000);
+			while (genomeDict.Count > 0)
+			{
+				if (activeThreads.ContainsKey(checkingWorker))
+				{
+					string? fitness = GetFitness(checkingWorker);
+					if (!Object.Equals(fitness, null))
+					{
+						double result = JsonSerializer.Deserialize<double>(fitness);
+						LastBestFitness = Math.Max(LastBestFitness, result);
+						File.Delete($"{WORKER_PATH}{checkingWorker}/result.json");
+						genomeDict[activeThreads[checkingWorker]].EvaluationInfo.SetFitness(result); //aktualizuj fitness
+						Console.WriteLine($"Worker {checkingWorker} finished processing genome {activeThreads[checkingWorker]} with fitness {result}");
+						genomeDict.Remove(activeThreads[checkingWorker]);
+						activeThreads.Remove(checkingWorker);
+					}
+				}
 
-            // Główna pętla będzie działać dopóki kolejka lub aktywne wątki nie będą puste.
-            while (genomesToCalculateFitness.Count > 0 || activeThreads.Count > 0)
-            {
-                if (activeThreads.ContainsKey(checkingWorker))
-                {
-                    string? fitnessJson = GetFitness(checkingWorker);
-                    if (!Object.Equals(fitnessJson, null))
-                    {
-                        double result = JsonSerializer.Deserialize<double>(fitnessJson);
-                        LastBestFitness = Math.Max(LastBestFitness, result);
-                        File.Delete($"{WORKER_PATH}{checkingWorker}/result.json");
+				if ((!activeThreads.ContainsKey(checkingWorker)) && genomesToCalculateFitness.Count > 0)
+				{
+					NeatGenome nextGenome = genomesToCalculateFitness.Dequeue();
+					activeThreads.Add(checkingWorker, nextGenome.Id);
+					SaveGenome(genomeDict[nextGenome.Id], checkingWorker);
+					var psi = new ProcessStartInfo
+					{
+						FileName = UNITY_PATH,
+						//Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -seedNo {seed} -logFile log_{checkingWorker}_{DateTime.Now.Month}_{DateTime.Now.Day}_{DateTime.Now.Hour}_{DateTime.Now.Minute}.txt",
+						Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode borderless",
+						WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
+						UseShellExecute = false
+					};
 
-                        uint finishedGenomeId = activeThreads[checkingWorker];
+					Process.Start(psi);
+				}
 
-                        // 3. Przypisz wynik fitness wszystkim genomom o tym samym ID.
-                        foreach (var genome in genomesById[finishedGenomeId])
-                        {
-                            genome.EvaluationInfo.SetFitness(result);
-                        }
-
-                        Console.WriteLine($"Worker {checkingWorker} finished processing genome {finishedGenomeId} with fitness {result}");
-                        activeThreads.Remove(checkingWorker);
-                    }
-                }
-
-                if ((!activeThreads.ContainsKey(checkingWorker)) && genomesToCalculateFitness.Count > 0)
-                {
-                    NeatGenome nextGenome = genomesToCalculateFitness.Dequeue();
-
-					Console.WriteLine($"Worker {checkingWorker} processing genome {nextGenome.Id}");
-                    activeThreads.Add(checkingWorker, nextGenome.Id);
-
-                    // POPRAWKA: Przekazujemy bezpośrednio obiekt 'nextGenome'.
-                    SaveGenome(nextGenome, checkingWorker);
-
-                    var psi = new ProcessStartInfo
-                    {
-                        FileName = UNITY_PATH,
-                        Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode borderless",
-                        WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
-                        UseShellExecute = false
-                    };
-
-                    Process.Start(psi);
-                }
-
-                checkingWorker = (checkingWorker + 1) % unityThreads;
-				Thread.Sleep(25); 
+				checkingWorker = (checkingWorker + 1) % unityThreads;
+				Thread.Sleep(25);
 			}
 		}
 	}

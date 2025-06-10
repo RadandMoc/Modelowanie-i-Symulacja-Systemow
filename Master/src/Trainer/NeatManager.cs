@@ -29,13 +29,13 @@ namespace Trainer
 		private IGenomeFactory<NeatGenome> _genomeFactory;
 		private NeatGenomeFactory _neatGenomeFactory;
 		private uint _savePopulationInterval;
-		private const double SELECTION_PROPORTION = 0.3;
+		private const double SELECTION_PROPORTION = 0.32;
 		
 		private static IComplexityRegulationStrategy COMPLEXITY_REGULATION_STRATEGY = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 70);
 		private static bool WANT_STARTING_FULLY_CONNECTED = false;
-		private const double OFFSPRING_SEXUAL_PROPORTION = 0.9;
+		private const double OFFSPRING_SEXUAL_PROPORTION = 0.45;
         private const double ELITISM = 0.1;
-        private const double OFFSPRING_ASEXUAL_PROPORTION = 0.1;
+        private const double OFFSPRING_ASEXUAL_PROPORTION = 0.55;
 
 		private const int INPUT_SENSOR = 9;
 
@@ -128,12 +128,12 @@ namespace Trainer
 
 		private void InitializeNeatParameters(NeatGenomeParameters neatGenomeParameters)
 		{
-            _neatGenomeFactory.NeatGenomeParameters.ConnectionWeightMutationProbability = 0.75;
-            _neatGenomeFactory.NeatGenomeParameters.AddNodeMutationProbability = 0.1;
+            _neatGenomeFactory.NeatGenomeParameters.ConnectionWeightMutationProbability = 0.5;
+            _neatGenomeFactory.NeatGenomeParameters.AddNodeMutationProbability = 0.15;
             _neatGenomeFactory.NeatGenomeParameters.DeleteConnectionMutationProbability = 0.05;
 
-            _neatGenomeFactory.NeatGenomeParameters.AddConnectionMutationProbability = 0.25;
-			_neatGenomeFactory.NeatGenomeParameters.DisjointExcessGenesRecombinedProbability = 0.8;
+            _neatGenomeFactory.NeatGenomeParameters.AddConnectionMutationProbability = 0.2;
+			_neatGenomeFactory.NeatGenomeParameters.DisjointExcessGenesRecombinedProbability = 0.85;
         }
 
         private List<NeatGenome> LoadGenomes(string path)

@@ -1076,6 +1076,7 @@ GameObject:
   m_Component:
   - component: {fileID: 407442645}
   - component: {fileID: 407442646}
+  - component: {fileID: 407442647}
   m_Layer: 0
   m_Name: FitnessFunction
   m_TagString: Untagged
@@ -1105,7 +1106,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 407442644}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3de5b937098a1aa49b499a9226632120, type: 3}
   m_Name: 
@@ -1122,6 +1123,32 @@ MonoBehaviour:
   - {fileID: 427009526}
   - {fileID: 1259896774}
   notSprayableObjects: []
+--- !u!114 &407442647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407442644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bc1c3107fc41454eaacbb38314881eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprayableObjects:
+  - {fileID: 1519878658}
+  - {fileID: 1859324799}
+  - {fileID: 524971015}
+  - {fileID: 1584878921}
+  - {fileID: 427009526}
+  - {fileID: 1259896774}
+  - {fileID: 254390826}
+  - {fileID: 535718028}
+  - {fileID: 1756118106}
+  - {fileID: 1075887565}
+  - {fileID: 55787029}
+  - {fileID: 71771511}
+  - {fileID: 1533924004}
 --- !u!1 &427009520
 GameObject:
   m_ObjectHideFlags: 0
@@ -4255,7 +4282,6 @@ GameObject:
   - component: {fileID: 2003146944}
   - component: {fileID: 2003146943}
   - component: {fileID: 2003146941}
-  - component: {fileID: 2003146942}
   m_Layer: 0
   m_Name: Spray
   m_TagString: Untagged
@@ -4354,18 +4380,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &2003146942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2003146940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 392350e92e4c72442ab7a3467ff8e494, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!222 &2003146943
 CanvasRenderer:
   m_ObjectHideFlags: 0
