@@ -24,14 +24,7 @@ namespace Assets.Scripts
             overallSpray += spray;
         }
 
-        public bool IsCleaned()
-        {
-            if (overallSpray >= sprayForFullCleaned)
-            {
-                return true;
-            }
-            return false;
-        }
+        public bool IsCleaned() => overallSpray >= sprayForFullCleaned;
 
 
         public double CalculateSprayResult() 
