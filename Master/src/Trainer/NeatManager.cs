@@ -59,7 +59,7 @@ namespace Trainer
             eaParam.InterspeciesMatingProportion = 0.15;
 
 			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric(1.0, 0.0, 15.0)), COMPLEXITY_REGULATION_STRATEGY);
-            var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
+            var complexityRegulationStrategy = COMPLEXITY_REGULATION_STRATEGY;
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;
@@ -84,7 +84,7 @@ namespace Trainer
 			eaParam.ElitismProportion = ELITISM;
 			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric()), COMPLEXITY_REGULATION_STRATEGY);
             eaParam.InterspeciesMatingProportion = 0.15;
-            var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
+            var complexityRegulationStrategy = COMPLEXITY_REGULATION_STRATEGY;
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;
@@ -114,7 +114,7 @@ namespace Trainer
 			_ea = new NeatEvolutionAlgorithm<NeatGenome>(eaParam, new KMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric(1.0, 0.0, 15.0)), COMPLEXITY_REGULATION_STRATEGY);
             eaParam.InterspeciesMatingProportion = 0.15;
             InitializeNeatParameters(_neatGenomeFactory.NeatGenomeParameters);
-            var complexityRegulationStrategy = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 50);
+            var complexityRegulationStrategy = COMPLEXITY_REGULATION_STRATEGY;
 			UpdateScheme updateScheme = new UpdateScheme(1);
 			_ea.UpdateScheme = updateScheme;
 			_ea.UpdateEvent += SaveToFile;

@@ -331,20 +331,26 @@ namespace SharpNeat.Genomes.Neat
 
 		private ConnectionMutationInfoList CreateConnectionWeightMutation_Reinforced()
 		{
-			ConnectionMutationInfoList list = new ConnectionMutationInfoList(7);
+			ConnectionMutationInfoList list = new ConnectionMutationInfoList(10);
 
 			// Gaussian jiggle with sigma=0.01 (most values between +-0.02)
 			// Jiggle 1,2 and 3 connections respectively.
-			list.Add(new ConnectionMutationInfo(0.3985, ConnectionPerturbanceType.JiggleGaussian,
-												ConnectionSelectionType.FixedQuantity, 0.0, 1, 0.0, 0.05));
+			list.Add(new ConnectionMutationInfo(0.0985, ConnectionPerturbanceType.JiggleGaussian,
+												ConnectionSelectionType.FixedQuantity, 0.0, 1, 0.0, 0.06));
 
 			list.Add(new ConnectionMutationInfo(0.2985, ConnectionPerturbanceType.JiggleGaussian,
-												ConnectionSelectionType.FixedQuantity, 0.0, 2, 0.0, 0.04));
+												ConnectionSelectionType.FixedQuantity, 0.0, 2, 0.0, 0.044));
 
 			list.Add(new ConnectionMutationInfo(0.1985, ConnectionPerturbanceType.JiggleGaussian,
-												ConnectionSelectionType.FixedQuantity, 0.0, 3, 0.0, 0.03));
+												ConnectionSelectionType.FixedQuantity, 0.0, 3, 0.0, 0.032));
 			list.Add(new ConnectionMutationInfo(0.1, ConnectionPerturbanceType.JiggleGaussian,
 												ConnectionSelectionType.FixedQuantity, 0.0, 4, 0.0, 0.02));
+			list.Add(new ConnectionMutationInfo(0.1, ConnectionPerturbanceType.JiggleGaussian,
+												ConnectionSelectionType.FixedQuantity, 0.0, 5, 0.0, 0.016));
+			list.Add(new ConnectionMutationInfo(0.1, ConnectionPerturbanceType.JiggleGaussian,
+												ConnectionSelectionType.FixedQuantity, 0.0, 6, 0.0, 0.012));
+			list.Add(new ConnectionMutationInfo(0.1, ConnectionPerturbanceType.JiggleGaussian,
+												ConnectionSelectionType.FixedQuantity, 0.0, 7, 0.0, 0.01));
 
 			// Reset mutations. 1, 2 and 3 connections respectively.
 			list.Add(new ConnectionMutationInfo(0.015, ConnectionPerturbanceType.Reset,
