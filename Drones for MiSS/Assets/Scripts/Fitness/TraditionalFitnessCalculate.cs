@@ -27,6 +27,10 @@ namespace Assets.Scripts
 
         private const double CLOSE_DISTANCE_SPRAYABLE = 50.0f;
 
+        private const double CLOSE_TO_ELEVATION_FACTIOR = 0.31f;
+
+        private const double NORMALIZED_FACTOR = -0.490711985f;
+
         private double closeToSpraybleCounter = 0;
 
         private int turnCounter = 0;
@@ -146,7 +150,7 @@ namespace Assets.Scripts
                 const float minDistanceClamp = 5f;
                 float clampedDistance = Math.Max(minDistanceClamp, closest);
 
-                closeToSpraybleCounter += 1.0 / Math.Sqrt(clampedDistance);
+                closeToSpraybleCounter += 1.0 / (CLOSE_TO_ELEVATION_FACTIOR * Math.Sqrt(clampedDistance)) + NORMALIZED_FACTOR;
             }
         }
 

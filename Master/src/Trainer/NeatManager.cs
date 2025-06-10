@@ -29,12 +29,12 @@ namespace Trainer
 		private IGenomeFactory<NeatGenome> _genomeFactory;
 		private NeatGenomeFactory _neatGenomeFactory;
 		private uint _savePopulationInterval;
-		private const double SELECTION_PROPORTION = 0.4;
+		private const double SELECTION_PROPORTION = 0.35;
 		
 		private static IComplexityRegulationStrategy COMPLEXITY_REGULATION_STRATEGY = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Relative, 70);
 		private static bool WANT_STARTING_FULLY_CONNECTED = false;
 		private const double OFFSPRING_SEXUAL_PROPORTION = 0.95;
-        private const double ELITISM = 0.15;
+        private const double ELITISM = 0.2;
         private const double OFFSPRING_ASEXUAL_PROPORTION = 0.15;
 
 		private const int INPUT_SENSOR = 9;

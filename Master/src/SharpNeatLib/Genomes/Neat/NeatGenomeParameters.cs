@@ -91,7 +91,7 @@ namespace SharpNeat.Genomes.Neat
             _rouletteWheelLayoutNonDestructive = CreateRouletteWheelLayout_NonDestructive();
 
             // Create a connection weight mutation scheme.
-            _connectionMutationInfoList = CreateConnectionWeightMutation_Reinforced();
+            _connectionMutationInfoList = CreateConnectionWeightMutation_TOMEK();
 
             // No fitness history.
             _fitnessHistoryLength = 0;
@@ -391,6 +391,50 @@ namespace SharpNeat.Genomes.Neat
             list.Initialize();
             return list;
         }
+
+
+        private ConnectionMutationInfoList CreateConnectionWeightMutation_TOMEK()
+        {
+            ConnectionMutationInfoList list = new ConnectionMutationInfoList(10);
+
+            // Gaussian jiggle with sigma=0.01 (most values between +-0.02)
+            // Jiggle 1,2 and 3 connections respectively.
+            list.Add(new ConnectionMutationInfo(0.1, ConnectionPerturbanceType.JiggleGaussian,
+                                                ConnectionSelectionType.FixedQuantity, 0.0, 1, 0.0, 0.1));
+
+            list.Add(new ConnectionMutationInfo(0.2, ConnectionPerturbanceType.JiggleGaussian,
+                                                ConnectionSelectionType.FixedQuantity, 0.0, 2, 0.0, 0.05));
+
+            list.Add(new ConnectionMutationInfo(0.4, ConnectionPerturbanceType.JiggleGaussian,
+                                                ConnectionSelectionType.FixedQuantity, 0.0, 3, 0.0, 0.04));
+            
+            list.Add(new ConnectionMutationInfo(0.2, ConnectionPerturbanceType.JiggleGaussian,
+                                                ConnectionSelectionType.FixedQuantity, 0.0, 4, 0.0, 0.03));
+
+            list.Add(new ConnectionMutationInfo(0.1, ConnectionPerturbanceType.JiggleGaussian,
+                                                ConnectionSelectionType.FixedQuantity, 0.0, 5, 0.0, 0.02));
+
+
+
+
+
+            list.Add(new ConnectionMutationInfo(0.1, ConnectionPerturbanceType.JiggleGaussian,
+                                                ConnectionSelectionType.FixedQuantity, 0.0, 5, 0.0, 0.05));
+
+            // Reset mutations. 1, 2 and 3 connections respectively.
+            list.Add(new ConnectionMutationInfo(0.015, ConnectionPerturbanceType.Reset,
+                                                ConnectionSelectionType.FixedQuantity, 0.0, 1, 0.0, 0));
+
+            list.Add(new ConnectionMutationInfo(0.015, ConnectionPerturbanceType.Reset,
+                                                ConnectionSelectionType.FixedQuantity, 0.0, 2, 0.0, 0));
+
+            list.Add(new ConnectionMutationInfo(0.015, ConnectionPerturbanceType.Reset,
+                                                ConnectionSelectionType.FixedQuantity, 0.0, 3, 0.0, 0));
+
+            list.Initialize();
+            return list;
+        }
+
 
         /// <summary>
         /// Returns the connection weight mutation scheme from SharpNEAT version 1.x

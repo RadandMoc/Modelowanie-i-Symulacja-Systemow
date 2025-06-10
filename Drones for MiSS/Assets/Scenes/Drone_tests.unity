@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 55787025}
   - component: {fileID: 55787030}
   - component: {fileID: 55787029}
+  - component: {fileID: 55787030}
   m_Layer: 0
   m_Name: InsideWindow
   m_TagString: Untagged

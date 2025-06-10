@@ -113,10 +113,12 @@ namespace Trainer
 					gg.Add(gen.Id);
 			}
 
-			Dictionary<uint, NeatGenome> genomeDict = genomes.ToDictionary(g => g.Id); //key-genome id, value-genome
-			Queue<NeatGenome> genomesToCalculateFitness = new(genomes); //[.. genomes];  genomes.ToList();
-			int seed = new Random().Next(0, 1000000); // Losowy seed dla symulacji, może być przekazany do Unity
-			int turn = new Random().Next(2800, 4800);
+            Queue<NeatGenome> genomesToCalculateFitness = new Queue<NeatGenome>(
+                genomesById.Values.Select(genomeList => genomeList[0])
+            );
+
+            int seed = new Random().Next(0, 1000000);
+			int turn = new Random().Next(2600, 5000);
 
 			while (genomeDict.Count > 0)
 			{
@@ -179,7 +181,7 @@ namespace Trainer
                         Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode windowed",
                         WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
                         UseShellExecute = false,
-                        //WindowStyle = ProcessWindowStyle.Minimized
+                        WindowStyle = ProcessWindowStyle.Minimized
 
                     };
 
