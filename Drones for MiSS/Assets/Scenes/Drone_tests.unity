@@ -469,7 +469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dd646feb98e41843a3cb7b04ca40226, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minDistance: 5
+  minDistance: 7
   sprayForce: 1
 --- !u!114 &145072034
 MonoBehaviour:
