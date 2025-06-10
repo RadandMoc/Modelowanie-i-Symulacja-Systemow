@@ -91,7 +91,7 @@ namespace SharpNeat.Genomes.Neat
             _rouletteWheelLayoutNonDestructive = CreateRouletteWheelLayout_NonDestructive();
 
             // Create a connection weight mutation scheme.
-            _connectionMutationInfoList = CreateConnectionWeightMutationScheme_Default();
+            _connectionMutationInfoList = CreateConnectionWeightMutation_Reinforced();
 
             // No fitness history.
             _fitnessHistoryLength = 0;
@@ -329,10 +329,41 @@ namespace SharpNeat.Genomes.Neat
             return new DiscreteDistribution(probabilities);
         }
 
-        /// <summary>
-        /// Returns the default connection weight mutation scheme.
-        /// </summary>
-        private ConnectionMutationInfoList CreateConnectionWeightMutationScheme_Default()
+		private ConnectionMutationInfoList CreateConnectionWeightMutation_Reinforced()
+		{
+			ConnectionMutationInfoList list = new ConnectionMutationInfoList(7);
+
+			// Gaussian jiggle with sigma=0.01 (most values between +-0.02)
+			// Jiggle 1,2 and 3 connections respectively.
+			list.Add(new ConnectionMutationInfo(0.3985, ConnectionPerturbanceType.JiggleGaussian,
+												ConnectionSelectionType.FixedQuantity, 0.0, 1, 0.0, 0.5));
+
+			list.Add(new ConnectionMutationInfo(0.2985, ConnectionPerturbanceType.JiggleGaussian,
+												ConnectionSelectionType.FixedQuantity, 0.0, 2, 0.0, 0.04));
+
+			list.Add(new ConnectionMutationInfo(0.1985, ConnectionPerturbanceType.JiggleGaussian,
+												ConnectionSelectionType.FixedQuantity, 0.0, 3, 0.0, 0.03));
+			list.Add(new ConnectionMutationInfo(0.1, ConnectionPerturbanceType.JiggleGaussian,
+												ConnectionSelectionType.FixedQuantity, 0.0, 4, 0.0, 0.02));
+
+			// Reset mutations. 1, 2 and 3 connections respectively.
+			list.Add(new ConnectionMutationInfo(0.015, ConnectionPerturbanceType.Reset,
+												ConnectionSelectionType.FixedQuantity, 0.0, 1, 0.0, 0));
+
+			list.Add(new ConnectionMutationInfo(0.015, ConnectionPerturbanceType.Reset,
+												ConnectionSelectionType.FixedQuantity, 0.0, 2, 0.0, 0));
+
+			list.Add(new ConnectionMutationInfo(0.015, ConnectionPerturbanceType.Reset,
+												ConnectionSelectionType.FixedQuantity, 0.0, 3, 0.0, 0));
+
+			list.Initialize();
+			return list;
+		}
+
+		/// <summary>
+		/// Returns the default connection weight mutation scheme.
+		/// </summary>
+		private ConnectionMutationInfoList CreateConnectionWeightMutationScheme_Default()
         {
             ConnectionMutationInfoList list = new ConnectionMutationInfoList(6);
 
