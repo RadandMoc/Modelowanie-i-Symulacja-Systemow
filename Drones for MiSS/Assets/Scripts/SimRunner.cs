@@ -45,7 +45,11 @@ public class SimRunner : MonoBehaviour
 
 	public static readonly int TURN = GetArg("-turnsNo", 2000);
 
-    void Start()
+	public static readonly bool CAMERA = GetArg("-camera", 0) == 1 ? true : false;
+
+	public static readonly int GENOMES_COUNT = GetArg("-genomesCount", 1);
+
+	void Start()
 	{
 		Debug.Log($"Seed number: {SEED} - Loaded from args: {SEED != 1234567}");
 		fitnessFunc = funcObject.GetComponent<SimplyFitness>();
@@ -82,7 +86,7 @@ public class SimRunner : MonoBehaviour
 		}
 	}
 
-	private NeatGenome ReadGenome(string path)
+	private NeatGenome ReadGenome(string path, int genomeId = 0)
 	{
 		NeatGenome genome;
 		try
