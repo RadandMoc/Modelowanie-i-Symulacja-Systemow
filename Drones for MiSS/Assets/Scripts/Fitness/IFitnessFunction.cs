@@ -11,7 +11,7 @@ namespace Assets.Scripts
     public interface IFitnessFunction
     {
         double Evaluate();
-
+        double AssessDroneFlewOutOfBounds(DroneSim sim);
         void OnMoveMade(DroneMove move, UnityEngine.Transform trans);
     }
 }

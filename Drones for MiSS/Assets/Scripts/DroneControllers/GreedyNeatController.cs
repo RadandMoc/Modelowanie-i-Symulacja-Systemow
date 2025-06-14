@@ -26,6 +26,7 @@ namespace Assets.Scripts
 			double maxValue = double.MinValue;
 			int bestIndex = -1;
 			string neurons_val = "Wartosc z neuronu ";
+
 			for (int i = 0; i < _outputs.Length; i++)
 			{
 				neurons_val += $"{i} -> {outputSignals[i]} ";
@@ -35,7 +36,8 @@ namespace Assets.Scripts
 					bestIndex = i;
 				}
 			}
-			return _outputs[bestIndex];
+			//Debug.Log(neurons_val);
+            return _outputs[bestIndex];
 		}
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -18,13 +19,17 @@ namespace Assets.Scripts
         [SerializeField]
         private List<NotSpraybleObject> notSprayableObjects;
 
-        private const double ACCEPTABLE_NORMALIZED_ENTROPY = 1.0;
+        private const double ACCEPTABLE_NORMALIZED_ENTROPY = 0.8;
 
         private const double ENTROPY_PENALTY_FACTOR = 80.0;
 
-        private const double REWARD_FOR_CLOSE_DISTANCE_SPRAYABLE = 100.0;
+        private const double REWARD_FOR_CLOSE_DISTANCE_SPRAYABLE = 150.0;
 
-        private const double CLOSE_DISTANCE_SPRAYABLE = 30.0f;
+        private const double CLOSE_DISTANCE_SPRAYABLE = 50.0f;
+
+        private const double CLOSE_TO_ELEVATION_FACTIOR = 0.31f;
+
+        private const double NORMALIZED_FACTOR = -0.490711985f;
 
         private double closeToSpraybleCounter = 0;
 
@@ -34,7 +39,9 @@ namespace Assets.Scripts
 
         private Dictionary<DroneMove, int> moveCounter;
 
+        private Vector3 lastPosition = Vector3.zero;
 
+        private int zAxisConst = 0;
 
         private void Awake()
         {
@@ -73,7 +80,12 @@ namespace Assets.Scripts
             return Math.Max(0.0, 100 + -Math.Max(collision, collision * collision) + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
         }
         */
-
+        public void InitalizeZConst(int zAxis) 
+        {
+            zAxisConst = zAxis;
+            lastPosition = new Vector3(0, zAxisConst, 0);
+            visitedPositions.Add(lastPosition);
+        }
 
         private double PenaltyForPassivness()
         {
@@ -131,8 +143,12 @@ namespace Assets.Scripts
 
             foreach (var sprayableObject in sprayableObjects)
             {
-                float distance = Vector3.Distance(dronePos.position, sprayableObject.transform.position);
-                closest = Math.Min(closest, distance);
+                if (!sprayableObject.IsCleaned())
+                {
+                    float distance = Vector3.Distance(dronePos.position, sprayableObject.transform.position);
+                    closest = Math.Min(closest, distance);
+                }
+                
             }
 
             if (closest < CLOSE_DISTANCE_SPRAYABLE)
@@ -140,7 +156,7 @@ namespace Assets.Scripts
                 const float minDistanceClamp = 5f;
                 float clampedDistance = Math.Max(minDistanceClamp, closest);
 
-                closeToSpraybleCounter += 1.0 / Math.Sqrt(clampedDistance);
+                closeToSpraybleCounter += 1.0 / (CLOSE_TO_ELEVATION_FACTIOR * Math.Sqrt(clampedDistance)) + NORMALIZED_FACTOR;
             }
         }
 
@@ -149,10 +165,21 @@ namespace Assets.Scripts
             return closeToSpraybleCounter / turnCounter * REWARD_FOR_CLOSE_DISTANCE_SPRAYABLE;
         }
 
+
+        public double PenaltyForGettingOutOfBounds() 
+        {
+            if (lastPosition.x < 0 || lastPosition.x > 250 || lastPosition.z < zAxisConst || lastPosition.z > zAxisConst + 150)
+            {
+                return 15;
+            }
+            return 0.0;
+        }
+
+
         public double Evaluate()
         {
             double collision = collisionDetector.CalculateAllCollisionTime();
-            return Math.Max(0.0, 100 + -Math.Max(collision, collision * Math.Sqrt(collision) / 6) - PenaltyForPassivness() - CalculateEntropyPenalty() + RewardForCloseToSprayable() + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
+            return Math.Max(0.0, 100 -Math.Max(collision, collision * Math.Sqrt(collision)) - PenaltyForPassivness() - CalculateEntropyPenalty() - PenaltyForGettingOutOfBounds() + RewardForCloseToSprayable() + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
         }
 
         public void OnMoveMade(DroneMove move, Transform trans)
@@ -161,8 +188,13 @@ namespace Assets.Scripts
             moveCounter[move]++;
             UpdateSprayableCounter(trans);
             turnCounter++;
+            lastPosition = trans.position;
 
+        }
 
+        public double AssessDroneFlewOutOfBounds(DroneSim sim)
+        {
+            return 0.0; 
         }
     }
 }

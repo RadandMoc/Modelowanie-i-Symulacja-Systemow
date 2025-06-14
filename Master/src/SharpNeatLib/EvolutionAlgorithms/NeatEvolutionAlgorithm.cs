@@ -572,6 +572,8 @@ namespace SharpNeat.EvolutionAlgorithms
                 _stats._sexualOffspringCount += (ulong)(inst._offspringSexualCount - crossSpecieMatings);
                 _stats._interspeciesOffspringCount += (ulong)crossSpecieMatings;
 
+                Console.WriteLine($"SEXUAL {_stats._sexualOffspringCount}");
+                Console.WriteLine($"ASEXUAL {_stats._asexualOffspringCount}");
                 // An index that keeps track of how many offspring have been produced in total.
                 int matingsCount = 0;
                 for(; matingsCount<crossSpecieMatings; matingsCount++)

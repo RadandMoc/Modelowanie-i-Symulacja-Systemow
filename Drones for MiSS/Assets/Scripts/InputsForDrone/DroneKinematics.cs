@@ -15,6 +15,7 @@ public class DroneKinematics : MonoBehaviour, IGetInputs
     private Vector3 lastCalculatedVelocity; // Przechowuje ostatnio obliczoną prędkość
     private const int neurons = 9;
 
+    private int zAxis;
 
     void Awake()
     {
@@ -37,6 +38,12 @@ public class DroneKinematics : MonoBehaviour, IGetInputs
     /// Pozycja (x, y, z), Prędkość (x, y, z), Obrót (Kąty Eulera x, y, z).
     /// Prędkość jest obliczana na podstawie zmiany pozycji od ostatniego wywołania tej metody.
     /// </summary>
+    /// 
+
+    public void InitializeZAxis(int zAxis) 
+    {
+        this.zAxis = zAxis;
+    }
     public double[] GetInputs()
     {
         Vector3 currentPosition = transform.position;
@@ -67,7 +74,7 @@ public class DroneKinematics : MonoBehaviour, IGetInputs
 
         inputs[0] = (double)currentPosition.x;
         inputs[1] = (double)currentPosition.y;
-        inputs[2] = (double)currentPosition.z;
+        inputs[2] = (double)currentPosition.z - zAxis;
 
         inputs[3] = (double)calculatedVelocityNow.x;
         inputs[4] = (double)calculatedVelocityNow.y;

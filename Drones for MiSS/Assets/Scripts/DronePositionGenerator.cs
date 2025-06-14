@@ -16,7 +16,7 @@ namespace Assets.Scripts
             new List<Coords> { new Coords(206,3,55), new Coords(235, 10, 80) },
             new List<Coords> { new Coords(93,3,54), new Coords(115, 10, 80) }
         };
-        private List<Coords> rotation = new List<Coords> { new Coords(0,0,0), new Coords(0,180,0), new Coords(0,-90,0), new Coords(0,90,0)};
+        private List<Coords> rotation = new List<Coords> { new Coords(0, 0, 0), new Coords(0, 180, 0), new Coords(0, -90, 0), new Coords(0, 90, 0) };
 
         private double[] weights = new double[] { 0.4, 0.4, 0.1, 0.1 };
 
@@ -37,7 +37,7 @@ namespace Assets.Scripts
             return weights.Length - 1;
         }
 
-        public (UnityEngine.Vector3 vec, UnityEngine.Quaternion quat) GeneratePositionRotation(Random rng) 
+        public (UnityEngine.Vector3 vec, UnityEngine.Quaternion quat) GeneratePositionRotation(Random rng)
         {
             int idx = WeightedRandomIndex(rng);
             double x = rng.NextDouble() * (positions[idx][1].x - positions[idx][0].x) + positions[idx][0].x;
@@ -66,7 +66,5 @@ namespace Assets.Scripts
             this.z = z;
         }
     }
-
-
 
 }
