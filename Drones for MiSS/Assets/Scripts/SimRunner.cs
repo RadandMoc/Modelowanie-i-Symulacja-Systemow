@@ -43,10 +43,11 @@ public class SimRunner : MonoBehaviour
 
 	public static readonly bool CAMERA = GetArg("-camera", 1) == 1 ? true : false;
 
-	public static readonly int GENOMES_COUNT = GetArg("-genomesCount", 1);
+	public static readonly int GENOMES_COUNT = GetArg("-genomesCount", 4);
 
 	private const int ZAXISNormalize = 1500; 
 
+	private bool isEnd = false;
 
     void Start()
 	{
@@ -67,10 +68,17 @@ public class SimRunner : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log("Koniec");
+			if (isEnd) 
+				return;
+            Debug.Log("Koniec");
 			// TODO : Save results to file - for now deleted, couse it was for only one genome
 			//SaveResult(Path.Combine(currentDir, "result.json"), fitnessFunc.Evaluate());
-			Application.Quit();
+			Dictionary<uint, double> fitnesses = new Dictionary<uint, double>();
+			foreach (var sim in simulations)
+				fitnesses.Add(sim.GenomeId, sim.ComputeFitness());
+			SaveResult(Path.Combine(currentDir, "result.json"), fitnesses);
+			isEnd = true;
+            Application.Quit();
 		}
 	}
 
