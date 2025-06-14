@@ -25,11 +25,11 @@ public class SimRunner : MonoBehaviour
 
 	[SerializeField]
 	private GameObject camera;
-	
+
 	[SerializeField]
 	private GameObject funcObject;
 
-	
+
 	private IFitnessFunction fitnessFunc;
 
 	[SerializeField]
@@ -39,13 +39,17 @@ public class SimRunner : MonoBehaviour
 
 	private readonly int workerId = GetArg("-workerId", 0);
 
-    int i = 0;
+	int i = 0;
 
 	public static readonly int SEED = GetArg("-seedNo", 1234567);
 
 	public static readonly int TURN = GetArg("-turnsNo", 2000);
 
-    void Start()
+	public static readonly bool CAMERA = GetArg("-camera", 1) == 1 ? true : false;
+
+	public static readonly int GENOMES_COUNT = GetArg("-genomesCount", 1);
+
+	void Start()
 	{
 		Debug.Log($"Seed number: {SEED} - Loaded from args: {SEED != 1234567}");
 		fitnessFunc = funcObject.GetComponent<SimplyFitness>();
@@ -53,8 +57,8 @@ public class SimRunner : MonoBehaviour
 	}
 
 	void Update()
-    {
-        //Debug.Log("SimRunner update");
+	{
+		//Debug.Log("SimRunner update");
 		i++;
 		if (i < TURN)
 		{
@@ -64,16 +68,22 @@ public class SimRunner : MonoBehaviour
 		else
 		{
 			Debug.Log(fitnessFunc.Evaluate());
-            SaveResult(Path.Combine(currentDir, "result.json"), fitnessFunc.Evaluate());
-            Application.Quit();
+			// TODO : Save results to file - for now deleted, couse it was for only one genome
+			//SaveResult(Path.Combine(currentDir, "result.json"), fitnessFunc.Evaluate());
+			Application.Quit();
 		}
-    }
+	}
 
-    private void SaveResult(string path, double fitness)
+	/// <summary>
+	/// Save JSON file with fitness results.
+	/// </summary>
+	/// <param name="path">path were save file</param>
+	/// <param name="fitnesses">dict of fitnesses, where <b>key</b> is original id of genome and <b>value</b> is a double value to save for genome</param>
+	private void SaveResult(string path, Dictionary<uint, double> fitnesses)
 	{
 		try
 		{
-			File.WriteAllText(path, JsonConvert.SerializeObject(fitness));
+			File.WriteAllText(path, JsonConvert.SerializeObject(fitnesses));
 			Debug.Log($"[Worker {workerId}] Wynik fitness zapisany do {path}");
 		}
 		catch (Exception ex)
@@ -182,18 +192,21 @@ public class SimRunner : MonoBehaviour
 		//Debug.Log($"[Worker {workerId}] Katalog roboczy: {currentDir}");
 		//Debug.Log($"[Worker {workerId}] Próba wczytania genomu z: {genomePath}");
 
-		NeatGenome genome = ReadGenome(Path.Combine(currentDir, "genome.xml"));
+		for (int i = 0; i < GENOMES_COUNT; i++)
+		{
+			NeatGenome genome = ReadGenome(Path.Combine(currentDir, $"genome{i}.xml"));
 
-		// Genom wczytany przez NeatGenomeXmlIO.LoadGenome() ma _genomeFactory == null.
-		// Musimy stworzyæ i przypisaæ fabrykê, aby NeatGenomeDecoder móg³ poprawnie dzia³aæ,
-		// poniewa¿ dekoder poœrednio korzysta z genome.ActivationFnLibrary (która zale¿y od fabryki).
+			// Genom wczytany przez NeatGenomeXmlIO.LoadGenome() ma _genomeFactory == null.
+			// Musimy stworzyæ i przypisaæ fabrykê, aby NeatGenomeDecoder móg³ poprawnie dzia³aæ,
+			// poniewa¿ dekoder poœrednio korzysta z genome.ActivationFnLibrary (która zale¿y od fabryki).
 
-		IBlackBox phenome = BlackBoxGenerator(genome); // Zdekodowana sieæ neuronowa
-		
+			IBlackBox phenome = BlackBoxGenerator(genome); // Zdekodowana sieæ neuronowa
 
-		// Wywo³anie logiki symulacji z gotowym fenotypem
-		InitializeDroneLogic(phenome, genome.Id, workerId);
-		
+
+			// Wywo³anie logiki symulacji z gotowym fenotypem
+			InitializeDroneLogic(phenome, genome.Id, workerId);
+		}
+
 		//Debug.Log($"[Worker {workerId}] Logika symulacji zakoñczona. Fitness dla genomu ID [{genome.Id}]: {fitness}");
 
 		//Debug.Log($"[Worker {workerId}] Zamykanie aplikacji.");
@@ -224,16 +237,16 @@ public class SimRunner : MonoBehaviour
 		var obj = GameObject.Find("Drone_red");
 
 		DroneKinematics droneKin = obj.GetComponent<DroneKinematics>();
-		
+
 		DronePositionGenerator posGenerator = new DronePositionGenerator();
 		(Vector3 vec, Quaternion rot) result = posGenerator.GeneratePositionRotation(new System.Random(SEED));
 		droneKin.transform.position = result.vec;
 		droneKin.transform.rotation = result.rot;
 		camera.transform.position = result.vec;
 		camera.transform.rotation = result.rot;
-		
-        IGetInputs droneKinematics = droneKin;
-        IGetInputs raycastHititng = obj.GetComponent<RaycastHitting>();
+
+		IGetInputs droneKinematics = droneKin;
+		IGetInputs raycastHititng = obj.GetComponent<RaycastHitting>();
 
 
 
