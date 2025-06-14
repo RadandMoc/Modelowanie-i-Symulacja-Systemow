@@ -10,7 +10,12 @@ public class SimplyFitness : MonoBehaviour, IFitnessFunction
 	[SerializeField]
 	private List<SprayableObject> sprayableObjects;
 
-	public double Evaluate() => sprayableObjects.Sum(x => x.CalculateSprayResult()) + (wasChanged ? 1.0 : 0.0);
+    public double AssessDroneFlewOutOfBounds(DroneSim sim)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public double Evaluate() => sprayableObjects.Sum(x => x.CalculateSprayResult()) + (wasChanged ? 1.0 : 0.0);
 	
 	public void OnMoveMade(DroneMove move, Transform trans)
 	{

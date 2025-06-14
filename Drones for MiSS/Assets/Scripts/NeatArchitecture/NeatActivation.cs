@@ -26,10 +26,17 @@ namespace Assets.Scripts
             blackBox.ResetState();
             double[] inputs = inputSources.SelectMany(x => x.GetInputs()).ToArray();
             int inputsCount = inputSources.Sum(x => x.GetInputsCount());
+
+            string neurons_val = "Warsta wejsciowa ";
+
+
             for (int i = 0; i < inputsCount; i++)
             {
+                neurons_val += $"{i} -> {inputs[i]} ";
                 blackBox.InputSignalArray[i] = inputs[i];
+
             }
+            UnityEngine.Debug.Log(neurons_val);
         }
 
         public double[] Activate() 

@@ -12,6 +12,7 @@ using Assets.Scripts;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using SharpNeat.Core;
+using System.Linq;
 
 public class SimRunner : MonoBehaviour
 {
@@ -19,23 +20,18 @@ public class SimRunner : MonoBehaviour
 
 	private static float simulationTimeLimit = 10f;
 
-	[SerializeField]
-	private DroneSim drone;
+
 
 
 	[SerializeField]
 	private GameObject camera;
 
-	[SerializeField]
-	private GameObject funcObject;
 
-
-	private IFitnessFunction fitnessFunc;
 
 	[SerializeField]
-	private MultiCollisionBehaviour collisionBehaviour;
+	private List<Simulation> simulations = new List<Simulation>();
 
-	private string currentDir;
+    private string currentDir;
 
 	private readonly int workerId = GetArg("-workerId", 0);
 
@@ -47,12 +43,14 @@ public class SimRunner : MonoBehaviour
 
 	public static readonly bool CAMERA = GetArg("-camera", 1) == 1 ? true : false;
 
-	public static readonly int GENOMES_COUNT = GetArg("-genomesCount", 1);
+	public static readonly int GENOMES_COUNT = GetArg("-genomesCount", 4);
 
-	void Start()
+	private const int ZAXISNormalize = 1500; 
+
+
+    void Start()
 	{
 		Debug.Log($"Seed number: {SEED} - Loaded from args: {SEED != 1234567}");
-		fitnessFunc = funcObject.GetComponent<SimplyFitness>();
 		Run();
 	}
 
@@ -60,14 +58,16 @@ public class SimRunner : MonoBehaviour
 	{
 		//Debug.Log("SimRunner update");
 		i++;
-		if (i < TURN)
+		if (i < TURN && simulations.Any(x => !x.isFinished))
 		{
-			var move = drone.ClickKey();
-			fitnessFunc.OnMoveMade(move, collisionBehaviour.transform);
+			foreach (var sim in simulations.Where(x => !x.isFinished))
+			{
+				sim.TriggerMove();
+            }
 		}
 		else
 		{
-			Debug.Log(fitnessFunc.Evaluate());
+			Debug.Log("Koniec");
 			// TODO : Save results to file - for now deleted, couse it was for only one genome
 			//SaveResult(Path.Combine(currentDir, "result.json"), fitnessFunc.Evaluate());
 			Application.Quit();
@@ -88,7 +88,7 @@ public class SimRunner : MonoBehaviour
 		}
 		catch (Exception ex)
 		{
-			Debug.LogError($"[Worker {workerId}] B³¹d podczas zapisu wyniku do {path}. Wyj¹tek: {ex.ToString()}");
+			Debug.LogError($"[Worker {workerId}] Bï¿½ï¿½d podczas zapisu wyniku do {path}. Wyjï¿½tek: {ex.ToString()}");
 		}
 	}
 
@@ -104,7 +104,7 @@ public class SimRunner : MonoBehaviour
 
 			if (genomeNode == null || genomeNode.Name != XmlElementNameNetwork)
 			{
-				Debug.LogError($"[Worker {workerId}] G³ówny element XML to nie '{XmlElementNameNetwork}' lub jest null. Znaleziono: '{(genomeNode?.Name ?? "null")}'. Plik: {path}");
+				Debug.LogError($"[Worker {workerId}] Gï¿½ï¿½wny element XML to nie '{XmlElementNameNetwork}' lub jest null. Znaleziono: '{(genomeNode?.Name ?? "null")}'. Plik: {path}");
 				Application.Quit();
 				throw new ArgumentException();
 			}
@@ -113,12 +113,12 @@ public class SimRunner : MonoBehaviour
 			bool expectNodeFnIds = true;
 			genome = NeatGenomeXmlIO.LoadGenome(genomeNode, expectNodeFnIds);
 
-			Debug.Log($"[Worker {workerId}] Genom ID [{genome.Id}] wczytany. Neurony: {genome.NeuronGeneList.Count}, Po³¹czenia: {genome.ConnectionGeneList.Count}. Wejœcia: {genome.InputNeuronCount}, Wyjœcia: {genome.OutputNeuronCount}");
+			Debug.Log($"[Worker {workerId}] Genom ID [{genome.Id}] wczytany. Neurony: {genome.NeuronGeneList.Count}, Poï¿½ï¿½czenia: {genome.ConnectionGeneList.Count}. Wejï¿½cia: {genome.InputNeuronCount}, Wyjï¿½cia: {genome.OutputNeuronCount}");
 			return genome;
 		}
 		catch (Exception ex)
 		{
-			Debug.LogError($"[Worker {workerId}] Krytyczny b³¹d podczas wczytywania/parsowania genomu z {path}. Wyj¹tek: {ex.ToString()}");
+			Debug.LogError($"[Worker {workerId}] Krytyczny bï¿½ï¿½d podczas wczytywania/parsowania genomu z {path}. Wyjï¿½tek: {ex.ToString()}");
 			Application.Quit();
 			throw new ArgumentException();
 		}
@@ -129,20 +129,20 @@ public class SimRunner : MonoBehaviour
 		IBlackBox phenome;
 		try
 		{
-			// KROK 1: Stworzenie IActivationFunctionLibrary (musi byæ identyczna jak w Trainerze)
-			// Zak³adamy, ¿e Trainer u¿ywa: DefaultActivationFunctionLibrary.CreateLibraryNeat(new ReLU());
+			// KROK 1: Stworzenie IActivationFunctionLibrary (musi byï¿½ identyczna jak w Trainerze)
+			// Zakï¿½adamy, ï¿½e Trainer uï¿½ywa: DefaultActivationFunctionLibrary.CreateLibraryNeat(new ReLU());
 			IActivationFunctionLibrary activationFnLib = DefaultActivationFunctionLibrary.CreateLibraryNeat(new ReLU());
 			//Debug.Log($"[Worker {workerId} | Genom {genome.Id}] Stworzono ActivationFunctionLibrary.");
 
 			// KROK 2: Stworzenie NeatGenomeParameters
-			// Powinny byæ spójne z konfiguracj¹ Trainera. Domyœlnie FeedforwardOnly=true.
+			// Powinny byï¿½ spï¿½jne z konfiguracjï¿½ Trainera. Domyï¿½lnie FeedforwardOnly=true.
 			NeatGenomeParameters neatGenomeParams = new NeatGenomeParameters();
-			// Jeœli Trainer modyfikuje neatGenomeParams (np. neatGenomeParams.FeedforwardOnly = false),
-			// nale¿y to odzwierciedliæ tutaj. Dla przyk³adu, za³ó¿my domyœlne wartoœci.
+			// Jeï¿½li Trainer modyfikuje neatGenomeParams (np. neatGenomeParams.FeedforwardOnly = false),
+			// naleï¿½y to odzwierciedliï¿½ tutaj. Dla przykï¿½adu, zaï¿½ï¿½my domyï¿½lne wartoï¿½ci.
 			// Debug.Log($"[Worker {workerId} | Genom {genome.Id}] Stworzono NeatGenomeParameters. FeedforwardOnly: {neatGenomeParams.FeedforwardOnly}, CyclicMaxCycles: {neatGenomeParams.CyclicNetworkMaxActivationCycles}");
 
 			// KROK 3: Stworzenie NeatGenomeFactory
-			// U¿ywamy liczby wejœæ/wyjœæ z wczytanego genomu.
+			// Uï¿½ywamy liczby wejï¿½ï¿½/wyjï¿½ï¿½ z wczytanego genomu.
 
 			NeatGenomeFactory genomeFactory = new NeatGenomeFactory(
 				inputNeuronCount: genome.InputNeuronCount,
@@ -154,7 +154,7 @@ public class SimRunner : MonoBehaviour
 			//Debug.Log($"[Worker {workerId} | Genom {genome.Id}] Stworzono NeatGenomeFactory.");
 
 			// KROK 4: Przypisanie GenomeFactory do wczytanego genomu
-			// To kluczowy krok, aby genome.ActivationFnLibrary by³o dostêpne dla dekodera.
+			// To kluczowy krok, aby genome.ActivationFnLibrary byï¿½o dostï¿½pne dla dekodera.
 			genome.GenomeFactory = genomeFactory;
 
 			if (!CyclicNetworkTest.IsNetworkCyclic(genome))
@@ -169,7 +169,7 @@ public class SimRunner : MonoBehaviour
 
 			if (phenome == null)
 			{
-				Debug.LogError($"[Worker {workerId} | Genom {genome.Id}] KRYTYCZNY B£¥D: Fenotyp jest null po dekodowaniu. Genom mo¿e byæ nieprawid³owy lub dekoder zawiód³.");
+				Debug.LogError($"[Worker {workerId} | Genom {genome.Id}] KRYTYCZNY Bï¿½ï¿½D: Fenotyp jest null po dekodowaniu. Genom moï¿½e byï¿½ nieprawidï¿½owy lub dekoder zawiï¿½dï¿½.");
 				Application.Quit();
 				throw new ArgumentException();
 			}
@@ -179,7 +179,7 @@ public class SimRunner : MonoBehaviour
 		}
 		catch (Exception ex)
 		{
-			Debug.LogError($"[Worker {workerId} | Genom {genome.Id}] KRYTYCZNY B£¥D podczas tworzenia fenotypu (konfiguracja fabryki/dekodera). Wyj¹tek: {ex.ToString()}");
+			Debug.LogError($"[Worker {workerId} | Genom {genome.Id}] KRYTYCZNY Bï¿½ï¿½D podczas tworzenia fenotypu (konfiguracja fabryki/dekodera). Wyjï¿½tek: {ex.ToString()}");
 			Application.Quit();
 			throw new ArgumentException();
 		}
@@ -189,30 +189,37 @@ public class SimRunner : MonoBehaviour
 	{
 		currentDir = Directory.GetCurrentDirectory();
 
-		//Debug.Log($"[Worker {workerId}] Katalog roboczy: {currentDir}");
-		//Debug.Log($"[Worker {workerId}] Próba wczytania genomu z: {genomePath}");
-
-		for (int i = 0; i < GENOMES_COUNT; i++)
+        //Debug.Log($"[Worker {workerId}] Katalog roboczy: {currentDir}");
+        //Debug.Log($"[Worker {workerId}] Prï¿½ba wczytania genomu z: {genomePath}");
+        DronePositionGenerator posGenerator = new DronePositionGenerator();
+        (Vector3 vec, Quaternion rot) result = posGenerator.GeneratePositionRotation(new System.Random(SEED));
+		List<Simulation> newSimulations = new List<Simulation>();
+        for (int i = 0; i < GENOMES_COUNT; i++)
 		{
 			NeatGenome genome = ReadGenome(Path.Combine(currentDir, $"genome{i}.xml"));
 
 			// Genom wczytany przez NeatGenomeXmlIO.LoadGenome() ma _genomeFactory == null.
-			// Musimy stworzyæ i przypisaæ fabrykê, aby NeatGenomeDecoder móg³ poprawnie dzia³aæ,
-			// poniewa¿ dekoder poœrednio korzysta z genome.ActivationFnLibrary (która zale¿y od fabryki).
+			// Musimy stworzyï¿½ i przypisaï¿½ fabrykï¿½, aby NeatGenomeDecoder mï¿½gï¿½ poprawnie dziaï¿½aï¿½,
+			// poniewaï¿½ dekoder poï¿½rednio korzysta z genome.ActivationFnLibrary (ktï¿½ra zaleï¿½y od fabryki).
 
-			IBlackBox phenome = BlackBoxGenerator(genome); // Zdekodowana sieæ neuronowa
+			IBlackBox phenome = BlackBoxGenerator(genome); // Zdekodowana sieï¿½ neuronowa
+            Vector3 vec = new Vector3(result.vec.x, result.vec.y, result.vec.z + i * ZAXISNormalize);
 
+			// Wywoï¿½anie logiki symulacji z gotowym fenotypem
+			//InitializeDroneLogic(phenome, genome.Id, workerId, vec, result.rot);
+			simulations[i].gameObject.SetActive(true);
+			simulations[i].InitializeDroneLogic(phenome, genome.Id, workerId, vec, result.rot, i  * ZAXISNormalize);
+            newSimulations.Add(simulations[i]);
 
-			// Wywo³anie logiki symulacji z gotowym fenotypem
-			InitializeDroneLogic(phenome, genome.Id, workerId);
-		}
+        }
+		simulations = newSimulations;
 
-		//Debug.Log($"[Worker {workerId}] Logika symulacji zakoñczona. Fitness dla genomu ID [{genome.Id}]: {fitness}");
+        //Debug.Log($"[Worker {workerId}] Logika symulacji zakoï¿½czona. Fitness dla genomu ID [{genome.Id}]: {fitness}");
 
-		//Debug.Log($"[Worker {workerId}] Zamykanie aplikacji.");
-		//Application.Quit();
+        //Debug.Log($"[Worker {workerId}] Zamykanie aplikacji.");
+        //Application.Quit();
 
-	}
+    }
 
 	static int GetArg(string key, int defaultValue)
 	{
@@ -231,19 +238,21 @@ public class SimRunner : MonoBehaviour
 		return defaultValue;
 	}
 
-	void InitializeDroneLogic(IBlackBox phenome, uint genomeId, int workerId)
+	/*
+	void InitializeDroneLogic(IBlackBox phenome, uint genomeId, int workerId, Vector3 vec, Quaternion rot)
 	{
-		//Debug.Log($"[Worker {workerId} | Genom {genomeId}] Wykonywanie logiki symulacji z fenotypem. Wejœcia: {phenome.InputCount}, Wyjœcia: {phenome.OutputCount}");
+		//Debug.Log($"[Worker {workerId} | Genom {genomeId}] Wykonywanie logiki symulacji z fenotypem. Wejï¿½cia: {phenome.InputCount}, Wyjï¿½cia: {phenome.OutputCount}");
 		var obj = GameObject.Find("Drone_red");
+
+
 
 		DroneKinematics droneKin = obj.GetComponent<DroneKinematics>();
 
-		DronePositionGenerator posGenerator = new DronePositionGenerator();
-		(Vector3 vec, Quaternion rot) result = posGenerator.GeneratePositionRotation(new System.Random(SEED));
-		droneKin.transform.position = result.vec;
-		droneKin.transform.rotation = result.rot;
-		camera.transform.position = result.vec;
-		camera.transform.rotation = result.rot;
+		
+		
+
+		//camera.transform.position = result.vec;
+		//camera.transform.rotation = result.rot;
 
 		IGetInputs droneKinematics = droneKin;
 		IGetInputs raycastHititng = obj.GetComponent<RaycastHitting>();
@@ -252,5 +261,5 @@ public class SimRunner : MonoBehaviour
 
 		drone.Initialize(phenome, new List<IGetInputs>() { droneKinematics, raycastHititng });
 
-	}
+	}*/
 }

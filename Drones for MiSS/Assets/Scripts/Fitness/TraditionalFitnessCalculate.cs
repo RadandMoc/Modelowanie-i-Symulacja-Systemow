@@ -41,6 +41,7 @@ namespace Assets.Scripts
 
         private Vector3 lastPosition = Vector3.zero;
 
+        private int zAxisConst = 0;
 
         private void Awake()
         {
@@ -79,7 +80,12 @@ namespace Assets.Scripts
             return Math.Max(0.0, 100 + -Math.Max(collision, collision * collision) + sprayableObjects.Sum(x => x.CalculateSprayResult()) + notSprayableObjects.Sum(x => x.calculateSprayResult()));
         }
         */
-
+        public void InitalizeZConst(int zAxis) 
+        {
+            zAxisConst = zAxis;
+            lastPosition = new Vector3(0, zAxisConst, 0);
+            visitedPositions.Add(lastPosition);
+        }
 
         private double PenaltyForPassivness()
         {
@@ -162,7 +168,7 @@ namespace Assets.Scripts
 
         public double PenaltyForGettingOutOfBounds() 
         {
-            if (lastPosition.x < 0 || lastPosition.x > 250 || lastPosition.z < 0 || lastPosition.z > 150)
+            if (lastPosition.x < 0 || lastPosition.x > 250 || lastPosition.z < zAxisConst || lastPosition.z > zAxisConst + 150)
             {
                 return 15;
             }
@@ -184,6 +190,11 @@ namespace Assets.Scripts
             turnCounter++;
             lastPosition = trans.position;
 
+        }
+
+        public double AssessDroneFlewOutOfBounds(DroneSim sim)
+        {
+            return 0.0; 
         }
     }
 }
