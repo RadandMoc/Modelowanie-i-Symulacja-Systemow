@@ -2,6 +2,7 @@
 using SharpNeat.Genomes.Neat;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -149,9 +150,9 @@ namespace Trainer
 					var psi = new ProcessStartInfo
 					{
 						FileName = UNITY_PATH,
-						//Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -seedNo {seed} -logFile log_{checkingWorker}_{DateTime.Now.Month}_{DateTime.Now.Day}_{DateTime.Now.Hour}_{DateTime.Now.Minute}.txt -camera {CAMERA} -genomesCount {genomesCount}",
-						//Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode borderless -camera {CAMERA} -genomesCount {genomesCount}",
-						Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode windowed -camera {CAMERA} -genomesCount {genomesCount}",
+						//Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -seedNo {seed} -logFile log_{checkingWorker}_{DateTime.Now.Month}_{DateTime.Now.Day}_{DateTime.Now.Hour}_{DateTime.Now.Minute}.txt -camera {Convert.ToInt32(CAMERA)} -genomesCount {genomesCount}",
+						//Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode borderless -camera {Convert.ToInt32(CAMERA)} -genomesCount {genomesCount}",
+						Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode windowed -camera {Convert.ToInt32(CAMERA)} -genomesCount {genomesCount}",
 						WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
 						UseShellExecute = false
 					};
