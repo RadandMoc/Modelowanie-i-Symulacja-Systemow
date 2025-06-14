@@ -14,6 +14,7 @@ namespace Trainer
 {
 	internal class UnityCommunication
 	{
+		#region Fields
 		private int unityThreads;
 		private NeatGenomeFactory genomeFactory;
 		public double LastBestFitness { get; private set; } = 0;
@@ -21,13 +22,17 @@ namespace Trainer
 		public static readonly string WORKER_PATH = Path.Combine(AppContext.BaseDirectory, @"..", "..", "..", "..", $"Workers/Worker_");
 		public static readonly int MAX_GENOMES_PER_WORKER = 10; // Maksymalna liczba genomów na jednego workera, może być dostosowana
 		public static readonly bool CAMERA = true; // Czy kamera ma być aktywna w symulacji Unity
+		#endregion Fields
 
+		#region Constructors
 		internal UnityCommunication(int unityThreads)
 		{
 			this.unityThreads = unityThreads;
 		}
 		internal UnityCommunication() : this(1) { }
+		#endregion Constructors
 
+		#region Private Methods
 		private void SaveGenomes(List<NeatGenome> genomes, int workerId)
 		{
 			string workerDir = $"{WORKER_PATH}{workerId}";
@@ -53,24 +58,7 @@ namespace Trainer
 			}
 		}
 
-		public void ClearWorkers()
-		{
-			for (int i = 0; i < unityThreads; i++)
-			{
-				try
-				{
-					File.Delete($"{WORKER_PATH}{i}/result.json");
-				}
-				catch (DirectoryNotFoundException) { }
-			}
-		}
-
-		public void InitializeGenomeFactory(NeatGenomeFactory factory)
-		{
-			genomeFactory = factory;
-		}
-
-		private Dictionary<uint,double>? GetFitnesses(int workerId)
+		private Dictionary<uint, double>? GetFitnesses(int workerId)
 		{
 			string resultPath = $"{WORKER_PATH}{workerId}/result.json";
 			if (!File.Exists(resultPath))
@@ -89,15 +77,32 @@ namespace Trainer
 				}
 			}
 		}
+		#endregion Private Methods
+
+		#region Public Methods
+		public void ClearWorkers()
+		{
+			for (int i = 0; i < unityThreads; i++)
+			{
+				try
+				{
+					File.Delete($"{WORKER_PATH}{i}/result.json");
+				}
+				catch (DirectoryNotFoundException) { }
+			}
+		}
+
+		public void InitializeGenomeFactory(NeatGenomeFactory factory)
+		{
+			genomeFactory = factory;
+		}
 
 		public void RunSimulations(ICollection<NeatGenome> genomes)
 		{
 			LastBestFitness = 0;
 			int checkingWorker = 0;
 
-
 			Dictionary<int, List<uint>> activeThreads = new(); // Key-no. worker, value-genome id
-			List<NeatGenome> genomesToProcess = new List<NeatGenome>();
 			HashSet<uint> genomeValidator = new HashSet<uint>();
 			foreach (NeatGenome gen in genomes)
 			{
@@ -164,5 +169,6 @@ namespace Trainer
 				Thread.Sleep(25);
 			}
 		}
+		#endregion Public Methods
 	}
 }
