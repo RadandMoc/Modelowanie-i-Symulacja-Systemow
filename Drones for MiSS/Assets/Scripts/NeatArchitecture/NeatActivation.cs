@@ -36,7 +36,7 @@ namespace Assets.Scripts
                 blackBox.InputSignalArray[i] = inputs[i];
 
             }
-            UnityEngine.Debug.Log(neurons_val);
+            // UnityEngine.Debug.Log(neurons_val);
         }
 
         public double[] Activate() 

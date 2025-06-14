@@ -43,7 +43,7 @@ public class SimRunner : MonoBehaviour
 
 	public static readonly bool CAMERA = GetArg("-camera", 1) == 1 ? true : false;
 
-	public static readonly int GENOMES_COUNT = GetArg("-genomesCount", 4);
+	public static readonly int GENOMES_COUNT = GetArg("-genomesCount", 1);
 
 	private const int ZAXISNormalize = 1500; 
 

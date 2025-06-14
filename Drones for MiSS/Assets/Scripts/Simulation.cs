@@ -33,6 +33,8 @@ namespace Assets.Scripts
 
         private Vector3 normalizedVector;
 
+        private double fitness = 0.0;
+
         private static readonly Vector3 CENTER = new Vector3(150, 0, 75);
 
         private static readonly Vector3 BOUNDARY = new Vector3(500, 0, 500);
@@ -91,6 +93,8 @@ namespace Assets.Scripts
             if (DroneOutOfBounds()) { 
                 Debug.LogWarning("Drone is out of bounds. Ending simulation.");
                 isFinished = true;
+                fitness = fitnessFunc.AssessDroneFlewOutOfBounds(drone);
+                transform.gameObject.SetActive(false);
                 return; 
             }
             Debug.Log($"POZYCJA {collisionBehaviour.transform.position}");
@@ -103,7 +107,7 @@ namespace Assets.Scripts
             if (isFinished)
             {
                 Debug.LogWarning("Fitness already computed. Returning previous value.");
-                return fitnessFunc.AssessDroneFlewOutOfBounds(drone);
+                return this.fitness;
             }
             double fitness = fitnessFunc.Evaluate();
             Debug.Log($"Fitness computed: {fitness}");
