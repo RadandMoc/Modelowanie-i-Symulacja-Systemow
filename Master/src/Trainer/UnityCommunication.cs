@@ -108,17 +108,15 @@ namespace Trainer
 			foreach (NeatGenome gen in genomes)
 			{
 				if (gg.Contains(gen.Id))
-					Console.WriteLine("POWTARZA SIE ID !!!!!!!!!!!!!!!!");
+					Console.WriteLine("POWTARZA SIE ID !!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!");
 				else
 					gg.Add(gen.Id);
 			}
 
-            Queue<NeatGenome> genomesToCalculateFitness = new Queue<NeatGenome>(
-                genomesById.Values.Select(genomeList => genomeList[0])
-            );
-
-            int seed = new Random().Next(0, 1000000);
-			int turn = new Random().Next(2600, 5000);
+			Dictionary<uint, NeatGenome> genomeDict = genomes.ToDictionary(g => g.Id); //key-genome id, value-genome
+			Queue<NeatGenome> genomesToCalculateFitness = new(genomes); //[.. genomes];  genomes.ToList();
+			int seed = new Random().Next(0, 1000000); // Losowy seed dla symulacji, może być przekazany do Unity
+			int turn = new Random().Next(2800, 4800);
 
 			while (genomeDict.Count > 0)
 			{
@@ -146,7 +144,8 @@ namespace Trainer
 					{
 						FileName = UNITY_PATH,
 						//Arguments = $"-batchmode -nographics -executeMethod SimRunner.Run -workerId {checkingWorker} -seedNo {seed} -logFile log_{checkingWorker}_{DateTime.Now.Month}_{DateTime.Now.Day}_{DateTime.Now.Hour}_{DateTime.Now.Minute}.txt",
-						Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode borderless",
+						//Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode borderless",
+						Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode windowed",
 						WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
 						UseShellExecute = false
 					};
@@ -154,42 +153,8 @@ namespace Trainer
 					Process.Start(psi);
 				}
 
-                        // 3. Przypisz wynik fitness wszystkim genomom o tym samym ID.
-                        foreach (var genome in genomesById[finishedGenomeId])
-                        {
-                            genome.EvaluationInfo.SetFitness(result);
-                        }
-
-                        Console.WriteLine($"Worker {checkingWorker} finished processing genome {finishedGenomeId} with fitness {result}");
-                        activeThreads.Remove(checkingWorker);
-                    }
-                }
-
-                if ((!activeThreads.ContainsKey(checkingWorker)) && genomesToCalculateFitness.Count > 0)
-                {
-                    NeatGenome nextGenome = genomesToCalculateFitness.Dequeue();
-
-					Console.WriteLine($"Worker {checkingWorker} processing genome {nextGenome.Id}");
-                    activeThreads.Add(checkingWorker, nextGenome.Id);
-
-                    // POPRAWKA: Przekazujemy bezpośrednio obiekt 'nextGenome'.
-                    SaveGenome(nextGenome, checkingWorker);
-
-                    var psi = new ProcessStartInfo
-                    {
-                        FileName = UNITY_PATH,
-                        Arguments = $"-executeMethod SimRunner.Run -workerId {checkingWorker} -turnsNo {turn} -seedNo {seed} -logFile log_{checkingWorker}.txt -screen-width 800 -screen-height 600 -window-mode windowed",
-                        WorkingDirectory = $"{WORKER_PATH}{checkingWorker}",
-                        UseShellExecute = false,
-                        WindowStyle = ProcessWindowStyle.Minimized
-
-                    };
-
-                    Process.Start(psi);
-                }
-
-                checkingWorker = (checkingWorker + 1) % unityThreads;
-				Thread.Sleep(25); 
+				checkingWorker = (checkingWorker + 1) % unityThreads;
+				Thread.Sleep(25);
 			}
 		}
 	}
