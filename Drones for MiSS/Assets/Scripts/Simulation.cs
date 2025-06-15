@@ -72,7 +72,7 @@ namespace Assets.Scripts
             drone.Initialize(phenome, new List<IGetInputs>() { droneKinematics, raycastHititng });
             ZAxisConst = zAxis;
             normalizedVector = new Vector3(0, 0, zAxis);
-            Initialize(FitnessType.TraditionalFitnessCalculate, genomeId);
+            Initialize(FitnessType.SimplyFitness, genomeId);
         }
 
         private bool DroneOutOfBounds()

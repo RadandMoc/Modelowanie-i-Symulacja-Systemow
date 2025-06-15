@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class SimplyFitness : MonoBehaviour, IFitnessFunction
 
     public double AssessDroneFlewOutOfBounds(DroneSim sim)
     {
-        throw new System.NotImplementedException();
+		return Math.Max(0.0, this.Evaluate() - 0.5);
     }
 
     public double Evaluate() => sprayableObjects.Sum(x => x.CalculateSprayResult()) + (wasChanged ? 1.0 : 0.0);

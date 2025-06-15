@@ -20,13 +20,8 @@ public class SimRunner : MonoBehaviour
 
 	private static float simulationTimeLimit = 10f;
 
-
-
-
 	[SerializeField]
 	private GameObject camera;
-
-
 
 	[SerializeField]
 	private List<Simulation> simulations = new List<Simulation>();
@@ -51,6 +46,7 @@ public class SimRunner : MonoBehaviour
 
     void Start()
 	{
+		camera.SetActive(CAMERA);
 		Debug.Log($"Seed number: {SEED} - Loaded from args: {SEED != 1234567}");
 		Run();
 	}
