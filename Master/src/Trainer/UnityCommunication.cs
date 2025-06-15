@@ -37,7 +37,7 @@ namespace Trainer
 		{
 			string workerDir = $"{WORKER_PATH}{workerId}";
 			Directory.CreateDirectory(workerDir);
-			for(int i = 0; i < genomes.Count; i++)
+			for (int i = 0; i < genomes.Count; i++)
 			{
 				NeatGenome genome = genomes[i];
 				string filePath = Path.Combine(workerDir, $"genome{i}.xml");
@@ -121,19 +121,17 @@ namespace Trainer
 			{
 				if (activeThreads.ContainsKey(checkingWorker))
 				{
-					Dictionary<uint,double>? fitnesses = GetFitnesses(checkingWorker);
+					Dictionary<uint, double>? fitnesses = GetFitnesses(checkingWorker);
 					if (!Object.Equals(fitnesses, null))
 					{
 						File.Delete($"{WORKER_PATH}{checkingWorker}/result.json");
 						foreach (var fitness in fitnesses)
 						{
 							LastBestFitness = Math.Max(LastBestFitness, fitness.Value);
-							foreach(uint genome_id in activeThreads[checkingWorker])
-							{
-								genomeDict[genome_id].EvaluationInfo.SetFitness(fitness.Value); //aktualizuj fitness
-								Console.WriteLine($"Worker {checkingWorker} finished processing genome {genome_id} with fitness {fitness.Value}");
-								genomeDict.Remove(genome_id);
-							}
+							genomeDict[fitness.Key].EvaluationInfo.SetFitness(fitness.Value); //aktualizuj fitness
+							Console.WriteLine($"Worker {checkingWorker} finished processing genome {fitness.Key} with fitness {fitness.Value}");
+							genomeDict.Remove(fitness.Key);
+
 						}
 						activeThreads.Remove(checkingWorker);
 					}
